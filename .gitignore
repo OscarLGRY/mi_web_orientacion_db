@@ -1,0 +1,15 @@
+# Nunca subir credenciales ni datos sensibles
+.env
+.env.local
+.env.*.local
+
+# Dependencias
+node_modules/
+
+# Logs
+npm-debug.log*
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db

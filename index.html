@@ -1,0 +1,3491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orientador de Carrera | IICO UASLP</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --primary:#2A3EB1;
+    --primary-dark:#1C2B85;
+    --accent-2:#0E8C8C;
+    --accent-violet:#6D3BE0;
+    --gradient-spectral:linear-gradient(90deg, var(--accent-violet), var(--primary), var(--accent-2));
+    --bg:#EEF1F6;
+    --card:#ffffff;
+    --text:#101826;
+    --text-soft:#4B5872;
+    --border:#D7DEE7;
+    --border-soft:#E2E7F0;
+    --font-heading:'Fraunces', Georgia, serif;
+    --font-body:'Inter', Arial, -apple-system, sans-serif;
+    --font-mono:'JetBrains Mono', 'Courier New', monospace;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:var(--font-body);
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    padding:30px 15px;
+    display:flex;
+    justify-content:center;
+    font-family:var(--font-body);
+}
+
+h1, h2, h3,
+.section-title,
+.modal-title,
+.bot-header-title,
+.perfil-nombre{
+    font-family:var(--font-heading);
+}
+
+.container{
+    width:100%;
+    max-width:1150px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+header{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.logo-iico-fixed{
+    position:fixed;
+    top:14px;
+    right:20px;
+    z-index:500;
+}
+
+.logo-iico-fixed img{
+    height:56px;
+    width:auto;
+    object-fit:contain;
+}
+
+.logo-fallback{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    height:40px;
+    padding:0 12px;
+    border:1px solid var(--border);
+    border-radius:4px;
+    background:#fff;
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:.8rem;
+    letter-spacing:.6px;
+    color:var(--primary-dark);
+}
+
+footer{
+    margin-top:10px;
+    display:flex;
+    justify-content:flex-start;
+}
+
+.presentacion-footer{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 16px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 3px 8px rgba(15,23,42,.06);
+    max-width:320px;
+}
+
+.presentacion-footer img{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--primary);
+    background:#e2e8f0;
+    flex-shrink:0;
+}
+
+header h1{
+    font-size:1.9rem;
+    color:var(--primary-dark);
+    letter-spacing:-.2px;
+    font-weight:600;
+    display:inline-block;
+}
+
+header h1::after{
+    content:"";
+    display:block;
+    height:3px;
+    width:72px;
+    margin:10px auto 0 auto;
+    background:var(--gradient-spectral);
+    border-radius:2px;
+}
+
+header p{
+    color:var(--text-soft);
+    font-size:.95rem;
+    margin-top:6px;
+}
+
+.presentacion-nombre{
+    font-family:var(--font-heading);
+    font-size:1rem;
+    color:var(--text);
+    font-weight:700;
+}
+
+.presentacion-rol{
+    font-size:.85rem;
+    color:var(--text-soft);
+    margin-top:2px;
+}
+
+.presentacion-correo{
+    font-size:.85rem;
+    color:var(--primary-dark);
+    font-weight:600;
+    text-decoration:none;
+    margin-top:2px;
+    display:inline-block;
+}
+
+.presentacion-correo:hover{
+    text-decoration:underline;
+}
+
+.tabs{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.tab-btn{
+    padding:12px 20px;
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;
+    color:var(--text-soft);
+    font-family:var(--font-mono);
+    font-size:.85rem;
+    letter-spacing:.2px;
+    transition:all .2s ease;
+    border-bottom:3px solid transparent;
+}
+
+.tab-btn:hover{
+    border-color:#b7c0d1;
+    background:#f8fafc;
+}
+
+.tab-btn.active{
+    background:var(--text);
+    color:#fff;
+    border-color:var(--text);
+    border-bottom:3px solid var(--accent-2);
+}
+
+.card{
+    background:var(--card);
+    padding:25px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    box-shadow:0 2px 6px rgba(16,24,38,.04);
+}
+
+.grid-options{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:16px;
+    margin-top:18px;
+}
+
+.grid-profesores{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:15px;
+    margin-top:15px;
+}
+
+.prof-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:15px;
+    text-align:center;
+    cursor:pointer;
+    transition:all .2s ease;
+    border-top:3px solid transparent;
+}
+
+.prof-card:hover{
+    border-color:var(--border);
+    border-top-color:var(--accent-2);
+    transform:translateY(-3px);
+    box-shadow:0 10px 22px rgba(16,24,38,.08);
+}
+
+.prof-card img{
+    width:110px;
+    height:125px;
+    border-radius:6px;
+    object-fit:cover;
+    margin-bottom:10px;
+    border:3px solid var(--primary);
+    background:#e2e8f0;
+}
+
+.option-card{
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    cursor:pointer;
+    transition:all .2s ease;
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-height:135px;
+    justify-content:center;
+    border-left:3px solid transparent;
+}
+
+.option-card:hover{
+    border-color:var(--border);
+    border-left-color:var(--accent-2);
+    transform:translateX(2px);
+    box-shadow:0 8px 20px rgba(16,24,38,.07);
+}
+
+textarea{
+    width:100%;
+    height:120px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-top:10px;
+    font-family:inherit;
+    font-size:.95rem;
+    resize:vertical;
+    color:var(--text);
+    background:#fff;
+    outline:none;
+}
+
+textarea:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(42,62,177,.1);
+}
+
+.btn-action{
+    background:var(--primary);
+    color:white;
+    padding:12px 24px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:.95rem;
+    margin-top:12px;
+    font-family:inherit;
+}
+
+.btn-action:hover{
+    background:var(--primary-dark);
+}
+
+.badge{
+    background:#EDEFFB;
+    color:var(--primary-dark);
+    padding:4px 10px;
+    border-radius:4px;
+    font-size:.76rem;
+    font-family:var(--font-mono);
+    font-weight:600;
+    display:inline-block;
+    margin:3px 2px;
+    border:1px solid #D6DAF5;
+}
+
+.badge-yellow{
+    background:#FBF1DD;
+    color:#8A5A15;
+    border:1px solid #F0DDAE;
+}
+
+.badge-green{
+    background:#DFF3EE;
+    color:#136B5E;
+    border:1px solid #BFE6DC;
+}
+
+.profesor-box{
+    background:#f8fafc;
+    border-left:4px solid var(--primary);
+    border-top:1px solid #d8e0e8;
+    border-right:1px solid #d8e0e8;
+    border-bottom:1px solid #d8e0e8;
+    padding:12px 15px;
+    border-radius:6px;
+    margin-top:10px;
+    cursor:pointer;
+    transition:all .2s ease;
+}
+
+.profesor-box:hover{
+    background:#f1f5f9;
+    border-color:#b8c5d3;
+    border-left-color:var(--primary);
+}
+
+.hidden{
+    display:none !important;
+}
+
+.materias-selector{
+    margin-top:14px;
+    border:1px solid var(--border-soft);
+    border-radius:8px;
+    padding:12px 15px;
+    background:#f8fafc;
+}
+
+.materias-selector summary{
+    cursor:pointer;
+    font-weight:600;
+    font-size:.9rem;
+    color:var(--primary-dark);
+}
+
+.materias-semestre{
+    margin-top:12px;
+}
+
+.materias-semestre-titulo{
+    font-size:.72rem;
+    font-weight:600;
+    color:var(--text-soft);
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    margin-bottom:6px;
+    font-family:var(--font-mono);
+}
+
+.materias-semestre-titulo::before{
+    content:"SEM ";
+}
+
+.materias-chip-grupo{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.materia-chip{
+    display:inline-block;
+    padding:5px 11px;
+    border-radius:4px;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text-soft);
+    font-size:.78rem;
+    font-family:var(--font-mono);
+    cursor:pointer;
+    transition:all .15s ease;
+}
+
+.materia-chip:hover{
+    border-color:var(--accent-2);
+    color:var(--primary-dark);
+}
+
+.materia-chip.selected{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:#fff;
+}
+
+.section-title{
+    font-size:1.08rem;
+    color:var(--primary-dark);
+    margin-bottom:14px;
+    font-weight:600;
+    letter-spacing:.1px;
+    padding-left:12px;
+    border-left:3px solid var(--accent-2);
+}
+
+ul.item-list{
+    list-style-type:square;
+    padding-left:20px;
+    font-size:.88rem;
+    color:#334155;
+}
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    background:rgba(15,23,42,.7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:15px;
+    overflow-y:auto;
+}
+
+.modal-content{
+    background:#fff;
+    width:100%;
+    max-width:800px;
+    max-height:92vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+    position:relative;
+    text-align:left;
+    box-shadow:0 20px 25px -5px rgba(0,0,0,.2);
+    border:1px solid #cbd5e1;
+}
+
+.modal-close{
+    position:absolute;
+    top:12px;
+    right:15px;
+    background:#f1f5f9;
+    border:1px solid #d8e0e8;
+    font-size:1.2rem;
+    font-weight:bold;
+    cursor:pointer;
+    color:#475569;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:10;
+}
+
+.modal-close:hover{
+    background:#e2e8f0;
+    color:#0f172a;
+}
+
+.avatar-wrapper{
+    width:160px;
+    height:190px;
+    margin:0 auto 15px auto;
+    border-radius:8px;
+    border:3px solid var(--primary);
+    background:#e2e8f0;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.avatar-wrapper img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.perfil-seccion{
+    background:#f8fafc;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+    border:1px solid var(--border-soft);
+}
+
+.dato{
+    margin-bottom:9px;
+    font-size:.9rem;
+    color:#334155;
+    line-height:1.45;
+}
+
+.dato strong{
+    color:#0f172a;
+}
+
+.correo{
+    color:var(--primary-dark);
+    font-weight:600;
+    word-break:break-word;
+}
+
+.modal-title{
+    color:var(--primary-dark);
+    font-size:1.45rem;
+    text-align:center;
+}
+
+.modal-subtitle{
+    color:#475569;
+    font-size:.9rem;
+    text-align:center;
+    margin-top:4px;
+}
+
+.publicacion{
+    padding:12px;
+    border:1px solid var(--border-soft);
+    background:#fff;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+
+.publicacion-titulo{
+    font-weight:700;
+    color:#0f172a;
+    font-size:.9rem;
+    line-height:1.4;
+}
+
+.publicacion-info{
+    font-size:.8rem;
+    color:#64748b;
+    margin-top:5px;
+    line-height:1.4;
+}
+
+.publicacion-link{
+    display:inline-block;
+    margin-top:7px;
+    color:var(--primary-dark);
+    font-weight:600;
+    text-decoration:none;
+    font-size:.82rem;
+}
+
+.publicacion-link:hover{
+    text-decoration:underline;
+}
+
+.linea-investigacion{
+    padding:10px 12px;
+    border-left:3px solid var(--primary);
+    background:#fff;
+    border-top:1px solid var(--border-soft);
+    border-right:1px solid var(--border-soft);
+    border-bottom:1px solid var(--border-soft);
+    border-radius:5px;
+    margin-bottom:8px;
+}
+
+.linea-investigacion strong{
+    color:#0f172a;
+    font-size:.9rem;
+}
+
+.linea-investigacion p{
+    color:#475569;
+    font-size:.82rem;
+    margin-top:4px;
+    line-height:1.4;
+}
+
+.orientacion-box{
+    margin-top:15px;
+    padding:15px;
+    border-radius:8px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+}
+
+.orientacion-box strong{
+    color:#1e3a8a;
+}
+
+.ruta-resultado{
+    padding:14px;
+    border:1px solid var(--border-soft);
+    border-left:4px solid var(--primary);
+    border-radius:8px;
+    background:#fff;
+    margin-bottom:10px;
+}
+
+.ruta-resultado h4{
+    color:var(--primary-dark);
+    font-size:.98rem;
+}
+
+.ruta-resultado p{
+    color:#475569;
+    font-size:.84rem;
+    line-height:1.45;
+    margin-top:5px;
+}
+
+.ruta-score{
+    font-size:.78rem;
+    color:#64748b;
+    margin-top:6px;
+}
+
+.link-btn{
+    display:inline-block;
+    margin-top:12px;
+    padding:10px 16px;
+    background:var(--primary);
+    color:#fff;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:.85rem;
+}
+
+.link-btn:hover{
+    background:var(--primary-dark);
+}
+
+/* ================================
+   ASISTENTE / SURICATA
+================================ */
+
+#botButton{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    width:72px;
+    height:72px;
+    border:2px solid #c5d0dc;
+    border-radius:50%;
+    background:#ffffff;
+    padding:4px;
+    cursor:pointer;
+    box-shadow:0 8px 25px rgba(15,23,42,.18);
+    z-index:9000;
+    transition:all .2s ease;
+    overflow:hidden;
+}
+
+#botButton img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:50%;
+    display:block;
+}
+
+#botButton:hover{
+    border-color:var(--primary);
+    transform:scale(1.06);
+    box-shadow:0 10px 28px rgba(15,23,42,.22);
+}
+
+#botWindow{
+    position:fixed;
+    right:25px;
+    bottom:110px;
+    width:370px;
+    max-width:calc(100vw - 30px);
+    height:550px;
+    max-height:calc(100vh - 130px);
+    background:white;
+    border:1px solid var(--border);
+    border-radius:15px;
+    box-shadow:0 20px 50px rgba(15,23,42,.25);
+    z-index:8999;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+.bot-header{
+    background:var(--primary);
+    color:white;
+    padding:13px 15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.bot-header-identity{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.bot-avatar{
+    width:45px;
+    height:45px;
+    object-fit:cover;
+    border-radius:50%;
+    background:#fff;
+    border:2px solid rgba(255,255,255,.8);
+}
+
+.bot-header-title{
+    font-weight:700;
+    font-size:1rem;
+}
+
+.bot-header-subtitle{
+    font-size:.75rem;
+    opacity:.9;
+    margin-top:2px;
+}
+
+.bot-close{
+    border:none;
+    background:transparent;
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+    font-family:Arial,sans-serif;
+}
+
+#botMessages{
+    flex:1;
+    overflow-y:auto;
+    padding:15px;
+    background:#f8fafc;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.bot-message{
+    max-width:85%;
+    padding:10px 13px;
+    border-radius:12px;
+    font-size:.88rem;
+    line-height:1.45;
+    white-space:pre-line;
+}
+
+.bot-message.bot{
+    align-self:flex-start;
+    background:white;
+    border:1px solid var(--border-soft);
+    color:#334155;
+}
+
+.bot-message.user{
+    align-self:flex-end;
+    background:var(--primary);
+    color:white;
+}
+
+.bot-input-area{
+    border-top:1px solid var(--border);
+    padding:10px;
+    display:flex;
+    gap:8px;
+    background:white;
+}
+
+#botInput{
+    flex:1;
+    min-width:0;
+    border:1px solid #c5d0dc;
+    border-radius:8px;
+    padding:10px;
+    font-family:inherit;
+    font-size:.88rem;
+    outline:none;
+    color:var(--text);
+}
+
+#botInput:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(2,132,199,.08);
+}
+
+#botSend{
+    border:none;
+    background:var(--primary);
+    color:white;
+    width:45px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+    font-family:Arial,sans-serif;
+}
+
+#botSend:hover{
+    background:var(--primary-dark);
+}
+
+.bot-suggestions{
+    padding:8px 10px 0;
+    display:flex;
+    gap:5px;
+    overflow-x:auto;
+    background:white;
+}
+
+.bot-suggestion{
+    white-space:nowrap;
+    border:1px solid var(--border-soft);
+    background:#f8fafc;
+    border-radius:15px;
+    padding:6px 9px;
+    font-size:.72rem;
+    color:#475569;
+    cursor:pointer;
+    font-family:inherit;
+}
+
+.bot-suggestion:hover{
+    border-color:var(--primary);
+    color:var(--primary-dark);
+    background:#fff;
+}
+
+/* Evitar scroll horizontal en tarjetas */
+.card,
+.modal-content,
+.option-card,
+.prof-card{
+    overflow-wrap:anywhere;
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:20px 10px;
+    }
+
+    .logo-iico-fixed img{
+        height:36px;
+    }
+
+    .logo-iico-fixed{
+        top:8px;
+        right:10px;
+    }
+
+    .presentacion-footer{
+        max-width:220px;
+        padding:8px 12px;
+        gap:8px;
+    }
+
+    .presentacion-footer img{
+        width:36px;
+        height:36px;
+    }
+
+    .presentacion-nombre{
+        font-size:.85rem;
+    }
+
+    .presentacion-rol,
+    .presentacion-correo{
+        font-size:.72rem;
+    }
+
+    header h1{
+        font-size:1.55rem;
+    }
+
+    header p{
+        font-size:.88rem;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+    .tabs{
+        flex-direction:column;
+    }
+
+    .tab-btn{
+        width:100%;
+    }
+
+    #botWindow{
+        right:10px;
+        bottom:95px;
+        width:calc(100vw - 20px);
+        height:500px;
+    }
+
+    #botButton{
+        right:15px;
+        bottom:15px;
+        width:65px;
+        height:65px;
+    }
+
+    .bot-tooltip{
+        right:15px;
+        bottom:85px;
+        max-width:200px;
+    }
+}
+
+/* ================================
+   ICONOGRAFÍA — ÁREAS DE DESARROLLO
+================================ */
+
+.ruta-icono{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.5rem;
+    background:linear-gradient(135deg, #EDEFFB, #E3F4F1);
+    border:1px solid var(--border-soft);
+}
+
+.option-card{
+    flex-direction:row;
+    align-items:flex-start;
+    gap:12px;
+}
+
+.option-card-texto{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.ruta-icono-grande{
+    width:52px;
+    height:52px;
+    min-width:52px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.85rem;
+    background:linear-gradient(135deg, #EDEFFB, #E3F4F1);
+    border:1px solid var(--border-soft);
+}
+
+.ruta-titulo-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+/* ================================
+   COINCIDENCIA / DIAGNÓSTICO
+================================ */
+
+.match-wrap{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.match-circle{
+    --pct:0;
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    flex-shrink:0;
+    background:
+        radial-gradient(closest-side, #fff 78%, transparent 79% 100%),
+        conic-gradient(var(--accent-2) calc(var(--pct) * 1%), #E2E7F0 0);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-mono);
+    font-weight:700;
+    font-size:.78rem;
+    color:var(--primary-dark);
+}
+
+.match-circle-sm{
+    --pct:0;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    flex-shrink:0;
+    background:
+        radial-gradient(closest-side, #fff 74%, transparent 75% 100%),
+        conic-gradient(var(--accent-2) calc(var(--pct) * 1%), #E2E7F0 0);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-mono);
+    font-weight:700;
+    font-size:.62rem;
+    color:var(--primary-dark);
+}
+
+.ruta-resultado{
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:all .2s ease;
+}
+
+.ruta-resultado:hover{
+    border-left-color:var(--accent-2);
+    transform:translateX(3px);
+    box-shadow:0 8px 18px rgba(16,24,38,.08);
+}
+
+.ruta-resultado-texto{
+    flex:1;
+    min-width:0;
+}
+
+/* ================================
+   PUESTOS SUGERIDOS Y COMPETENCIAS
+================================ */
+
+.puestos-grid{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:8px;
+}
+
+.puesto-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 12px;
+    background:#f8fafc;
+    border:1px solid var(--border-soft);
+    border-left:3px solid var(--accent-violet);
+    border-radius:6px;
+    font-size:.85rem;
+    color:var(--text);
+    font-weight:500;
+}
+
+.puesto-card-icono{
+    font-size:1.05rem;
+    flex-shrink:0;
+}
+
+.competencias-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:8px;
+}
+
+.competencia-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:6px 12px;
+    border-radius:16px;
+    background:#EEF1F6;
+    border:1px solid var(--border);
+    color:var(--text);
+    font-size:.8rem;
+    font-weight:600;
+}
+
+.competencia-chip::before{
+    content:"⚡";
+    font-size:.75rem;
+}
+
+/* ================================
+   CERTIFICACIONES (clicables)
+================================ */
+
+.badge-cert{
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    transition:all .15s ease;
+}
+
+.badge-cert:hover{
+    background:#F5E8C7;
+    border-color:#e0c485;
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(138,90,21,.18);
+}
+
+.badge-cert::after{
+    content:"ⓘ";
+    font-size:.8em;
+    opacity:.75;
+}
+
+.cert-modal-content{
+    max-width:440px;
+    text-align:left;
+}
+
+.cert-modal-icono{
+    width:52px;
+    height:52px;
+    border-radius:12px;
+    background:linear-gradient(135deg, #FBF1DD, #F0DDAE);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.7rem;
+    margin-bottom:12px;
+}
+
+.cert-modal-titulo{
+    font-family:var(--font-heading);
+    font-size:1.2rem;
+    color:var(--primary-dark);
+}
+
+.cert-modal-cuerpo{
+    margin-top:10px;
+    font-size:.9rem;
+    color:#334155;
+    line-height:1.55;
+}
+
+.cert-modal-meta{
+    margin-top:12px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+/* ================================
+   PROFESORES — INDICADOR PUBLICACIONES
+================================ */
+
+.pub-indicador{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    margin-top:6px;
+    padding:3px 9px;
+    border-radius:12px;
+    background:#FBF1DD;
+    color:#8A5A15;
+    border:1px solid #F0DDAE;
+    font-size:.72rem;
+    font-weight:700;
+    font-family:var(--font-mono);
+}
+
+/* ================================
+   MODAL PROFESOR — ACORDEÓN
+================================ */
+
+.acordeon-seccion{
+    background:#f8fafc;
+    border-radius:8px;
+    margin-top:15px;
+    border:1px solid var(--border-soft);
+    overflow:hidden;
+}
+
+.acordeon-cabecera{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:13px 15px;
+    cursor:pointer;
+    user-select:none;
+    list-style:none;
+}
+
+.acordeon-cabecera::-webkit-details-marker{
+    display:none;
+}
+
+.acordeon-cabecera .section-title{
+    margin-bottom:0;
+}
+
+.acordeon-flecha{
+    color:var(--text-soft);
+    transition:transform .2s ease;
+    font-size:.85rem;
+    flex-shrink:0;
+    margin-left:10px;
+}
+
+.acordeon-seccion[open] > .acordeon-cabecera .acordeon-flecha{
+    transform:rotate(180deg);
+}
+
+.acordeon-cuerpo{
+    padding:0 15px 15px 15px;
+}
+
+/* ================================
+   BURBUJA NO INVASIVA DEL BOT
+================================ */
+
+.bot-tooltip{
+    position:fixed;
+    right:25px;
+    bottom:105px;
+    max-width:230px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px 14px;
+    box-shadow:0 10px 28px rgba(15,23,42,.18);
+    font-size:.82rem;
+    color:var(--text);
+    line-height:1.4;
+    z-index:8998;
+    animation:botTooltipIn .35s ease;
+}
+
+.bot-tooltip::after{
+    content:"";
+    position:absolute;
+    bottom:-7px;
+    right:32px;
+    width:14px;
+    height:14px;
+    background:#fff;
+    border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    transform:rotate(45deg);
+}
+
+.bot-tooltip-close{
+    position:absolute;
+    top:4px;
+    right:6px;
+    border:none;
+    background:transparent;
+    color:#94a3b8;
+    font-size:14px;
+    cursor:pointer;
+    padding:4px;
+    line-height:1;
+}
+
+@keyframes botTooltipIn{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo-iico-fixed">
+    <img
+        src="iico.png"
+        alt="Logo IICO"
+        onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'logo-fallback',textContent:'IICO'}))"
+    >
+</div>
+
+<header>
+
+    <h1>Orientador de Carrera - IICO UASLP</h1>
+    <p>Conecta tus intereses con áreas profesionales, investigación e infraestructura del IICO</p>
+
+</header>
+
+<div class="tabs">
+
+    <button class="tab-btn active" id="btnTab1" onclick="cambiarTab(1)">
+        Sé lo que me interesa
+    </button>
+
+    <button class="tab-btn" id="btnTab2" onclick="cambiarTab(2)">
+        No sé qué hacer (Diagnóstico)
+    </button>
+
+    <button class="tab-btn" id="btnTab3" onclick="cambiarTab(3)">
+        Directorio de Investigadores IICO
+    </button>
+
+</div>
+
+<div id="vistaDirecta" class="card">
+
+    <div class="section-title">
+        Selecciona un área de desarrollo profesional:
+    </div>
+
+    <div id="contenedorRutas" class="grid-options"></div>
+
+</div>
+
+<div id="vistaDiagnostico" class="card hidden">
+
+    <div class="section-title">
+        Escribe tus temas de interés, softwares, habilidades o materias favoritas:
+    </div>
+
+    <p style="font-size:.9rem;color:#64748b;margin-bottom:8px;">
+        <em>"Me gusta LabVIEW y las bases de datos."</em><br>
+        <em>"Me interesa Raman, MBE, semiconductores y elipsometría."</em><br>
+        <em>"Me gustan los robots, sensores, motores y control PID."</em>
+    </p>
+
+    <textarea
+        id="inputFortalezas"
+        placeholder="Escribe aquí tus intereses..."
+    ></textarea>
+
+    <details class="materias-selector">
+
+        <summary>
+            ¿No sabes qué escribir? Elige materias de Ingeniería Física que te hayan gustado
+        </summary>
+
+        <p style="font-size:.82rem;color:#64748b;margin-top:8px;">
+            Selecciona una o varias materias. Se agregarán automáticamente a tu texto de intereses.
+        </p>
+
+        <div id="contenedorMateriasChip"></div>
+
+    </details>
+
+    <button class="btn-action" onclick="analizarFortalezas()">
+        Analizar intereses
+    </button>
+
+</div>
+
+<div id="vistaDirectorio" class="card hidden">
+
+    <div class="section-title">
+        Investigadores y Profesores del IICO:
+    </div>
+
+    <p style="font-size:.88rem;color:#64748b;">
+        Haz clic sobre cualquier investigador para conocer más detalles sobre su perfil y sus líneas de trabajo.
+    </p>
+
+    <div id="contenedorDirectorio" class="grid-profesores"></div>
+
+</div>
+
+<div id="vistaDetalle" class="card hidden">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:10px;
+    ">
+
+        <div class="ruta-titulo-header">
+
+            <span id="rutaIcono" class="ruta-icono-grande">🎓</span>
+
+            <h2
+                id="rutaTitulo"
+                style="color:var(--primary-dark);font-size:1.3rem;"
+            >
+                Ruta Sugerida
+            </h2>
+
+        </div>
+
+        <div id="badgeCoincidencia" class="match-wrap hidden">
+
+            <div id="matchCircle" class="match-circle" style="--pct:0;">
+                0%
+            </div>
+
+            <span id="matchTexto" style="font-size:.82rem;color:var(--text-soft);max-width:220px;">
+                Coincidencia Encontrada
+            </span>
+
+        </div>
+
+    </div>
+
+    <p
+        id="rutaDescripcion"
+        style="
+            margin-top:8px;
+            color:#475569;
+            font-size:.95rem;
+            line-height:1.5;
+        "
+    ></p>
+
+    <div id="materiasInfluyentes" class="hidden" style="margin-top:12px;">
+
+        <div class="section-title" style="font-size:.9rem;">
+            Materias que influyen en esta recomendación
+        </div>
+
+        <div id="materiasInfluyentesBadges"></div>
+
+    </div>
+
+    <hr style="
+        margin:20px 0;
+        border:0;
+        border-top:1px solid var(--border);
+    ">
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+        gap:25px;
+    ">
+
+        <div>
+
+            <div class="section-title">
+                Investigador(es) del IICO vinculados a esta área
+            </div>
+
+            <p style="
+                font-size:.82rem;
+                color:#64748b;
+                margin-bottom:10px;
+            ">
+                Haz clic en un profesor para ver su perfil.
+            </p>
+
+            <div id="contenedorProfesores"></div>
+
+        </div>
+
+        <div>
+
+            <div class="section-title">
+                Plan de Desarrollo Profesional
+            </div>
+
+            <div style="margin-bottom:15px;">
+
+                <strong style="font-size:.9rem;color:#0f172a;">
+                    💼 Puestos Sugeridos:
+                </strong>
+
+                <div
+                    id="trabajosLista"
+                    class="puestos-grid"
+                ></div>
+
+            </div>
+
+            <div style="margin-bottom:15px;">
+
+                <strong style="font-size:.9rem;color:#0f172a;">
+                    ⚡ Competencias a desarrollar:
+                </strong>
+
+                <div
+                    id="queAprenderTexto"
+                    class="competencias-grid"
+                ></div>
+
+            </div>
+
+            <div style="margin-bottom:15px;">
+
+                <strong style="font-size:.9rem;color:#0f172a;">
+                    🏅 Certificaciones Clave:
+                </strong>
+
+                <p style="font-size:.76rem;color:#64748b;margin-top:2px;">
+                    Haz clic en una certificación para ver de qué se trata.
+                </p>
+
+                <div id="certificacionesBadges" style="margin-top:6px;"></div>
+
+            </div>
+
+            <div>
+
+                <strong style="font-size:.9rem;color:#0f172a;">
+                    Nivel de Inglés:
+                </strong>
+
+                <div id="inglesBadge" style="margin-top:6px;"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="rutasMultiples" style="margin-top:25px;"></div>
+
+</div>
+
+<footer>
+    <div id="presentacionEstudiante" class="presentacion-footer hidden"></div>
+</footer>
+
+</div>
+
+<div
+    id="modalProfesor"
+    class="modal-overlay hidden"
+    onclick="cerrarModalFondo(event)"
+>
+
+    <div class="modal-content">
+
+        <button class="modal-close" onclick="cerrarModal()">
+            &times;
+        </button>
+
+        <div class="avatar-wrapper">
+            <img id="modalFoto" src="" alt="Profesor">
+        </div>
+
+        <h3 id="modalNombre" class="modal-title"></h3>
+
+        <p id="modalCuerpo" class="modal-subtitle"></p>
+
+        <div class="orientacion-box">
+
+            <strong>Cómo puede orientarte:</strong>
+
+            <p
+                id="modalOrientacion"
+                style="
+                    margin-top:7px;
+                    color:#334155;
+                    font-size:.88rem;
+                    line-height:1.5;
+                "
+            ></p>
+
+        </div>
+
+        <details class="acordeon-seccion" open>
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🔎 Perfil de Investigación
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+
+                <p class="dato" id="modalPerfil"></p>
+
+                <p class="dato">
+                    <strong>Área principal:</strong>
+                    <span id="modalLineaPrincipal"></span>
+                </p>
+
+            </div>
+
+        </details>
+
+        <details class="acordeon-seccion">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🧭 Líneas de Investigación
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+                <div id="modalLineas"></div>
+            </div>
+
+        </details>
+
+        <details class="acordeon-seccion">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🛠️ Técnicas y Tecnologías
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+                <div id="modalTecnologias"></div>
+            </div>
+
+        </details>
+
+        <details class="acordeon-seccion">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🪪 Datos personales
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+
+                <p class="dato">
+                    <strong>Grado Académico:</strong>
+                    <span id="modalGrado"></span>
+                </p>
+
+                <p class="dato">
+                    <strong>Nivel SNII:</strong>
+                    <span id="modalSnii"></span>
+                </p>
+
+                <p class="dato">
+                    <strong>ORBIS ID:</strong>
+                    <span id="modalOrbis"></span>
+                </p>
+
+                <p class="dato" id="filaOrcid">
+                    <strong>ORCID:</strong>
+                    <span id="modalOrcid"></span>
+                </p>
+
+            </div>
+
+        </details>
+
+        <details class="acordeon-seccion">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🏛️ Datos institucionales
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+
+                <p class="dato">
+                    <strong>Entidad Académica:</strong>
+                    <span id="modalEntidadAcademica"></span>
+                </p>
+
+                <p class="dato">
+                    <strong>Entidad de Investigación:</strong>
+                    <span id="modalEntidadInvestigacion"></span>
+                </p>
+
+                <p class="dato">
+                    <strong>Dirección de oficina:</strong>
+                    <br>
+                    <span id="modalDireccion"></span>
+                </p>
+
+                <p class="dato">
+                    <strong>Correo electrónico:</strong>
+                    <br>
+                    <span id="modalCorreo" class="correo"></span>
+                </p>
+
+            </div>
+
+        </details>
+
+        <details class="acordeon-seccion">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🔬 Investigación
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+
+                <p class="dato">
+                    <strong>Cuerpo Académico:</strong>
+                    <span id="modalCuerpoCompleto"></span>
+                </p>
+
+                <p class="dato">
+                    <strong>Laboratorio / Enfoque:</strong>
+                    <br>
+                    <span id="modalLaboratorio"></span>
+                </p>
+
+            </div>
+
+        </details>
+
+        <details class="acordeon-seccion" id="acordeonPublicaciones">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    📄 Publicaciones Destacadas
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+                <div id="modalPublicaciones"></div>
+            </div>
+
+        </details>
+
+        <details class="acordeon-seccion">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🧩 Rutas Asociadas
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+                <div id="modalRutas"></div>
+            </div>
+
+        </details>
+
+        <div
+            id="modalScholar"
+            style="text-align:center;margin-top:18px;"
+        ></div>
+
+    </div>
+
+</div>
+
+<!-- MODAL DE INFORMACIÓN DE CERTIFICACIÓN -->
+
+<div
+    id="modalCertInfo"
+    class="modal-overlay hidden"
+    onclick="cerrarModalCertFondo(event)"
+>
+
+    <div class="modal-content cert-modal-content">
+
+        <button class="modal-close" onclick="cerrarModalCert()">
+            &times;
+        </button>
+
+        <div class="cert-modal-icono" id="certModalIcono">🏅</div>
+
+        <div class="cert-modal-titulo" id="certModalTitulo"></div>
+
+        <div class="cert-modal-cuerpo" id="certModalCuerpo"></div>
+
+        <div class="cert-modal-meta" id="certModalMeta"></div>
+
+        <a
+            id="certModalBuscar"
+            class="link-btn"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="margin-top:16px;"
+        >
+            Buscar más información
+        </a>
+
+    </div>
+
+</div>
+
+<!-- BOTÓN DE LA SURICATA -->
+
+<div
+    id="botTooltip"
+    class="bot-tooltip hidden"
+>
+    <button
+        class="bot-tooltip-close"
+        onclick="cerrarBurbujaBot(event)"
+        aria-label="Cerrar mensaje"
+    >
+        &times;
+    </button>
+    ¡Hola! Si tienes dudas sobre tu orientación de carrera, aquí puedes acceder a mi ayuda 👋
+</div>
+
+<button
+    id="botButton"
+    onclick="toggleBot()"
+    title="Abrir asistente"
+    aria-label="Abrir asistente de orientación"
+>
+    <img
+        src="suricata.png"
+        alt="Asistente de orientación"
+    >
+</button>
+
+<!-- VENTANA DEL ASISTENTE -->
+
+<div id="botWindow" class="hidden">
+
+    <div class="bot-header">
+
+        <div class="bot-header-identity">
+
+            <img
+                src="suricata.png"
+                alt="Asistente de orientación"
+                class="bot-avatar"
+            >
+
+            <div>
+
+                <div class="bot-header-title">
+                    Asistente de Orientación
+                </div>
+
+                <div class="bot-header-subtitle">
+                    Orientador de Carrera · IICO UASLP
+                </div>
+
+            </div>
+
+        </div>
+
+        <button
+            class="bot-close"
+            onclick="toggleBot()"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div class="bot-suggestions">
+
+        <button
+            class="bot-suggestion"
+            onclick="usarSugerencia('Me interesa programación')"
+        >
+            Programación
+        </button>
+
+        <button
+            class="bot-suggestion"
+            onclick="usarSugerencia('Me interesan robots y control PID')"
+        >
+            Robótica
+        </button>
+
+        <button
+            class="bot-suggestion"
+            onclick="usarSugerencia('Me interesa óptica')"
+        >
+            Óptica
+        </button>
+
+        <button
+            class="bot-suggestion"
+            onclick="usarSugerencia('¿Qué profesores trabajan en estas áreas?')"
+        >
+            Profesores
+        </button>
+
+    </div>
+
+    <div id="botMessages">
+
+        <div class="bot-message bot">
+            ¡Hola!
+
+            Soy el asistente del Orientador de Carrera del IICO.
+
+            Puedo ayudarte a encontrar áreas profesionales, profesores, líneas de investigación y posibles rutas de desarrollo.
+
+            ¿Qué te interesa?
+        </div>
+
+    </div>
+
+    <div class="bot-input-area">
+
+        <input
+            id="botInput"
+            type="text"
+            placeholder="Escribe tu pregunta..."
+            onkeydown="manejarEnterBot(event)"
+        >
+
+        <button
+            id="botSend"
+            onclick="enviarBot()"
+            aria-label="Enviar mensaje"
+            title="Enviar"
+        >
+            ➤
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const API = '/api';
+
+/* =========================================================
+   ICONOGRAFÍA DE ÁREAS DE DESARROLLO
+========================================================= */
+
+const MAPA_ICONOS_RUTA = [
+    { claves:['electronic','instrument','embebid','circuit','pcb'], icono:'🔌' },
+    { claves:['mecatron','control','robot','automatiz','plc'], icono:'🤖' },
+    { claves:['programa','cómputo','computo','software','desarrollo'], icono:'💻' },
+    { claves:['dato','inteligencia artificial', 'ia,', 'machine learning'], icono:'📊' },
+    { claves:['matemátic','matematic','modelad','simulaci'], icono:'📐' },
+    { claves:['nanotecno','material'], icono:'🧪' },
+    { claves:['semiconductor','dispositivo electr'], icono:'🔬' },
+    { claves:['espectroscop','caracterizaci','metrolog'], icono:'🔭' },
+    { claves:['óptica','optica','láser','laser','fotónic','fotonic'], icono:'✨' },
+    { claves:['telecomunicaci','comunicaci'], icono:'📡' },
+    { claves:['energía solar','energia solar','fotovoltaic'], icono:'☀️' },
+    { claves:['biofísic','biofisic','médic','medic','biomédic','biomedic'], icono:'🩺' }
+];
+
+function iconoParaRuta(titulo) {
+
+    const t = String(titulo || '').toLowerCase();
+
+    for (const grupo of MAPA_ICONOS_RUTA) {
+        if (grupo.claves.some(clave => t.includes(clave))) {
+            return grupo.icono;
+        }
+    }
+
+    return '🎓';
+}
+
+/* =========================================================
+   INFORMACIÓN DE CERTIFICACIONES
+========================================================= */
+
+const INFO_CERTIFICACIONES = {
+    'ipc-a-610 certified specialist':'Certificación internacional sobre criterios de aceptabilidad para ensambles electrónicos: soldadura, montaje de componentes y calidad en placas PCB.',
+    'labview certified associate developer':'Certificación de National Instruments que valida habilidades básicas-intermedias para programar en LabVIEW, usado en instrumentación virtual y adquisición de datos.',
+    'associate certified electronics technician':'Certificación de nivel inicial (CETa) para técnicos en electrónica, que valida conocimientos fundamentales de circuitos y mediciones.',
+    'siemens certified automation associate':'Certificación de Siemens sobre programación y configuración de controladores PLC (como el S7) usados en automatización industrial.',
+    'fanuc robotics certification':'Certificación sobre programación y operación de robots industriales FANUC, ampliamente usados en líneas de manufactura y automatización.',
+    'matlab/simulink certification':'Certificación de MathWorks que valida el manejo de MATLAB y Simulink para modelado, simulación y análisis de sistemas dinámicos.',
+    'matlab certification':'Certificación de MathWorks que valida el dominio de MATLAB para cálculo numérico, análisis de datos y programación científica.',
+    'python institute pcap':'Certificación PCAP (Certified Associate in Python Programming) que valida habilidades de programación en Python a nivel intermedio.',
+    'python institute pcap/pcpp':'Certificaciones del Python Institute que validan programación en Python: PCAP (nivel asociado) y PCPP (nivel profesional).',
+    'c++ institute certification':'Certificación del C++ Institute que valida el dominio de programación en lenguaje C++.',
+    'microsoft power bi data analyst associate':'Certificación oficial de Microsoft (PL-300) que valida habilidades para preparar, modelar, visualizar y analizar datos con Power BI.',
+    'oracle database sql certified associate':'Certificación de Oracle que valida el dominio de SQL para consultar, administrar y manipular bases de datos relacionales.',
+    'aws certified developer':'Certificación de Amazon Web Services que valida habilidades para desarrollar y mantener aplicaciones en la nube de AWS.',
+    'wolfram certification':'Certificación de Wolfram (creadores de Mathematica) que valida el uso de cómputo simbólico y análisis matemático avanzado.',
+    'professional certificate in data science':'Certificado profesional que valida conocimientos en análisis estadístico, programación y machine learning aplicados a ciencia de datos.',
+    'six sigma green belt':'Certificación en metodología Six Sigma para mejora de procesos y control de calidad, con enfoque en reducción de defectos y variabilidad.',
+    'cleanroom safety certification':'Certificación sobre protocolos de seguridad y buenas prácticas para trabajar en salas limpias (cleanrooms), usadas en fabricación de semiconductores y nanotecnología.',
+    'iso 9001:2015 auditor interno':'Certificación como auditor interno de la norma ISO 9001:2015, sistema de gestión de calidad reconocido internacionalmente.',
+    'semiconductor manufacturing certification':'Certificación sobre procesos de fabricación de semiconductores: crecimiento cristalino, litografía, dopaje y control de calidad.',
+    'iso/iec 17025':'Norma internacional que establece los requisitos generales para la competencia de laboratorios de ensayo y calibración.',
+    'internal auditor iso 9001':'Certificación como auditor interno del sistema de gestión de calidad ISO 9001.',
+    'raman spectroscopy certification':'Certificación sobre la técnica de espectroscopía Raman, usada para identificar y caracterizar materiales a partir de su respuesta vibracional.',
+    'zemax optical design certification':'Certificación en el software Zemax, utilizado para el diseño y simulación de sistemas ópticos (lentes, láseres, instrumentos).',
+    'laser safety officer':'Certificación que acredita conocimientos sobre el manejo seguro de láseres y la normativa de protección en laboratorios ópticos.',
+    'cfot':'Certified Fiber Optic Technician: certificación internacional sobre instalación, prueba y mantenimiento de redes de fibra óptica.',
+    'fiber optics technician':'Certificación técnica sobre instalación, empalme y mantenimiento de sistemas de fibra óptica.',
+    'optical network certification':'Certificación sobre diseño y operación de redes ópticas de telecomunicaciones.',
+    'certificación fotovoltaica ec0586':'Estándar de competencia mexicano (CONOCER) para la instalación de sistemas fotovoltaicos interconectados a la red.',
+    'nabcep associate':'Certificación de la North American Board of Certified Energy Practitioners para profesionales que inician su carrera en energía solar fotovoltaica.',
+    'radiation protection certification':'Certificación sobre protocolos de seguridad radiológica, necesaria en aplicaciones médicas y de investigación con radiación ionizante.',
+    'iso 13485':'Norma internacional de sistemas de gestión de calidad específica para la fabricación de dispositivos médicos.',
+    'medical physics certification':'Certificación en física médica, especialidad que aplica principios físicos al diagnóstico y tratamiento clínico (radioterapia, imagenología, etc.).'
+};
+
+function infoCertificacion(nombre) {
+
+    const clave = String(nombre || '').trim().toLowerCase();
+
+    return INFO_CERTIFICACIONES[clave] ||
+        'No contamos con una descripción detallada de esta certificación todavía. Puedes usar el botón de abajo para buscar información oficial sobre ella.';
+}
+
+function abrirModalCert(nombreCodificado) {
+
+    const nombre = decodeURIComponent(nombreCodificado);
+
+    document.getElementById('certModalTitulo').innerText = nombre;
+    document.getElementById('certModalCuerpo').innerText = infoCertificacion(nombre);
+
+    document.getElementById('certModalBuscar').href =
+        `https://www.google.com/search?q=${encodeURIComponent(nombre + ' certificación')}`;
+
+    document.getElementById('modalCertInfo').classList.remove('hidden');
+    document.querySelector('#modalCertInfo .modal-content').scrollTop = 0;
+}
+
+function cerrarModalCert() {
+    document.getElementById('modalCertInfo').classList.add('hidden');
+}
+
+function cerrarModalCertFondo(e) {
+    if (e.target.id === 'modalCertInfo') {
+        cerrarModalCert();
+    }
+}
+
+function cambiarTab(num) {
+
+    document
+        .getElementById('btnTab1')
+        .classList
+        .toggle('active', num === 1);
+
+    document
+        .getElementById('btnTab2')
+        .classList
+        .toggle('active', num === 2);
+
+    document
+        .getElementById('btnTab3')
+        .classList
+        .toggle('active', num === 3);
+
+    document
+        .getElementById('vistaDirecta')
+        .classList
+        .toggle('hidden', num !== 1);
+
+    document
+        .getElementById('vistaDiagnostico')
+        .classList
+        .toggle('hidden', num !== 2);
+
+    document
+        .getElementById('vistaDirectorio')
+        .classList
+        .toggle('hidden', num !== 3);
+
+    if (num === 3) {
+        cargarDirectorioCompleto();
+    }
+}
+
+async function cargarPerfil() {
+
+    try {
+
+        const res = await fetch(`${API}/perfil`);
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const perfil = await res.json();
+
+        if (!perfil) {
+            return;
+        }
+
+        const contenedor = document.getElementById('presentacionEstudiante');
+
+        contenedor.innerHTML = `
+
+            ${
+                perfil.foto_url
+                    ? `<img src="${perfil.foto_url}" alt="${perfil.nombre || ''}" onerror="this.style.display='none'">`
+                    : ''
+            }
+
+            <div>
+
+                <div class="presentacion-nombre">
+                    ${perfil.nombre || ''}
+                </div>
+
+                <div class="presentacion-rol">
+                    Estudiante de ${perfil.carrera || 'Ingeniería Física'}
+                </div>
+
+                ${
+                    perfil.correo && perfil.correo !== 'PENDIENTE_DE_CORREO'
+                        ? `<a class="presentacion-correo" href="mailto:${perfil.correo}">${perfil.correo}</a>`
+                        : ''
+                }
+
+            </div>
+
+        `;
+
+        contenedor.classList.remove('hidden');
+
+    } catch (err) {
+
+        console.error('Error al cargar perfil:', err);
+
+    }
+}
+
+let materiasSeleccionadas = new Set();
+
+function toggleMateriaChip(nombre, el) {
+
+    if (materiasSeleccionadas.has(nombre)) {
+        materiasSeleccionadas.delete(nombre);
+        el.classList.remove('selected');
+    } else {
+        materiasSeleccionadas.add(nombre);
+        el.classList.add('selected');
+    }
+
+    sincronizarTextareaMaterias();
+}
+
+function sincronizarTextareaMaterias() {
+
+    const textarea = document.getElementById('inputFortalezas');
+
+    let texto = textarea.value
+        .replace(/\s*Me gustaron:[^.]*\.\s*$/i, '')
+        .trim();
+
+    const materiasTexto = Array.from(materiasSeleccionadas).join(', ');
+
+    if (materiasTexto) {
+        texto = (texto ? texto + ' ' : '') + `Me gustaron: ${materiasTexto}.`;
+    }
+
+    textarea.value = texto;
+}
+
+async function cargarMateriasChips() {
+
+    try {
+
+        const res = await fetch(`${API}/materias`);
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const materias = await res.json();
+
+        const porSemestre = {};
+
+        materias.forEach(m => {
+            const sem = m.semestre || 0;
+
+            if (!porSemestre[sem]) {
+                porSemestre[sem] = [];
+            }
+
+            porSemestre[sem].push(m);
+        });
+
+        const semestres = Object.keys(porSemestre)
+            .sort((a, b) => a - b);
+
+        document.getElementById('contenedorMateriasChip').innerHTML =
+
+            semestres.map(sem => `
+
+                <div class="materias-semestre">
+
+                    <div class="materias-semestre-titulo">
+                        ${String(sem).padStart(2,'0')}
+                    </div>
+
+                    <div class="materias-chip-grupo">
+
+                        ${
+                            porSemestre[sem].map(m => `
+                                <span
+                                    class="materia-chip"
+                                    onclick="toggleMateriaChip('${m.nombre.replace(/'/g, "\\'")}', this)"
+                                >
+                                    ${m.nombre}
+                                </span>
+                            `).join('')
+                        }
+
+                    </div>
+
+                </div>
+
+            `).join('');
+
+    } catch (err) {
+
+        console.error('Error al cargar materias:', err);
+
+    }
+}
+
+async function cargarRutas() {
+
+    try {
+
+        const res = await fetch(`${API}/rutas`);
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const rutas = await res.json();
+
+        document.getElementById('contenedorRutas').innerHTML =
+            rutas.map(r => `
+
+                <div
+                    class="option-card"
+                    onclick="cargarDetalleRuta(${r.id})"
+                >
+
+                    <span class="ruta-icono">${iconoParaRuta(r.titulo)}</span>
+
+                    <div class="option-card-texto">
+
+                        <strong style="
+                            color:var(--primary-dark);
+                            font-size:1rem;
+                        ">
+                            ${r.titulo}
+                        </strong>
+
+                        <span style="
+                            font-size:.82rem;
+                            color:#64748b;
+                            line-height:1.45;
+                        ">
+                            ${(r.descripcion || '').substring(0,95)}...
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `).join('');
+
+    } catch (err) {
+
+        console.error('Error al cargar rutas:', err);
+
+    }
+}
+
+async function cargarDetalleRuta(id) {
+
+    try {
+
+        const res =
+            await fetch(`${API}/ruta-detalle/${id}`);
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        document
+            .getElementById('badgeCoincidencia')
+            .classList
+            .add('hidden');
+
+        mostrarResultado(
+            data.ruta,
+            data.profesores,
+            []
+        );
+
+    } catch (err) {
+
+        console.error(
+            'Error al obtener datos de la ruta:',
+            err
+        );
+
+        alert('Error al obtener datos de la ruta.');
+
+    }
+}
+
+async function cargarDirectorioCompleto() {
+
+    try {
+
+        const res =
+            await fetch(`${API}/profesores`);
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const profesores = await res.json();
+
+        document.getElementById('contenedorDirectorio').innerHTML =
+            profesores.map(p => `
+
+                <div
+                    class="prof-card"
+                    onclick="abrirModalProfesor(${p.id})"
+                >
+
+                    <img
+                        src="${p.foto_url || ''}"
+                        alt="${p.nombre}"
+                        onerror="
+                            this.onerror=null;
+                            this.style.display='none';
+                        "
+                    >
+
+                    <strong style="
+                        font-size:.95rem;
+                        color:#0f172a;
+                        display:block;
+                    ">
+                        ${p.nombre}
+                    </strong>
+
+                    <span style="
+                        font-size:.8rem;
+                        color:var(--primary);
+                        font-weight:600;
+                    ">
+                        ${p.cuerpo_academico || ''}
+                    </span>
+
+                    ${
+                        Number(p.publicaciones_destacadas_count) > 0
+                            ? `
+                                <div class="pub-indicador">
+                                    📄 ${p.publicaciones_destacadas_count} publicación(es) destacada(s)
+                                </div>
+                              `
+                            : ''
+                    }
+
+                </div>
+
+            `).join('');
+
+    } catch (err) {
+
+        console.error(
+            'Error al cargar directorio:',
+            err
+        );
+
+    }
+}
+
+async function abrirModalProfesor(id) {
+
+    try {
+
+        const res =
+            await fetch(`${API}/profesor/${id}`);
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        if (!data.profesor) {
+            throw new Error('No se encontró el profesor');
+        }
+
+        const p = data.profesor;
+
+        const img =
+            document.getElementById('modalFoto');
+
+        img.style.display = 'block';
+
+        img.src =
+            p.foto_url || '';
+
+        img.alt =
+            p.nombre;
+
+        img.onerror = function() {
+
+            this.onerror = null;
+            this.style.display = 'none';
+
+        };
+
+        document
+            .getElementById('modalNombre')
+            .innerText =
+            p.nombre || 'Sin nombre';
+
+        document
+            .getElementById('modalCuerpo')
+            .innerText =
+            p.cuerpo_academico || 'Sin registro';
+
+        document
+            .getElementById('modalOrientacion')
+            .innerText =
+            p.orientacion_profesional ||
+            'Consulta con este investigador para conocer cómo sus líneas de trabajo pueden relacionarse con tus intereses académicos y profesionales.';
+
+        document
+            .getElementById('modalPerfil')
+            .innerText =
+            p.perfil_investigacion ||
+            'No hay una descripción de perfil disponible.';
+
+        document
+            .getElementById('modalLineaPrincipal')
+            .innerText =
+            p.linea_principal ||
+            'No disponible';
+
+        document
+            .getElementById('modalGrado')
+            .innerText =
+            p.grado ||
+            'No disponible';
+
+        document
+            .getElementById('modalSnii')
+            .innerText =
+            p.snii ||
+            'No disponible';
+
+        document
+            .getElementById('modalOrbis')
+            .innerText =
+            p.orbis_id ||
+            'No disponible';
+
+        const filaOrcid =
+            document.getElementById('filaOrcid');
+
+        if (p.orcid) {
+
+            document
+                .getElementById('modalOrcid')
+                .innerText =
+                p.orcid;
+
+            filaOrcid.style.display =
+                'block';
+
+        } else {
+
+            filaOrcid.style.display =
+                'none';
+
+        }
+
+        document
+            .getElementById('modalEntidadAcademica')
+            .innerText =
+            p.entidad_academica ||
+            'No disponible';
+
+        document
+            .getElementById('modalEntidadInvestigacion')
+            .innerText =
+            p.entidad_investigacion ||
+            'No disponible';
+
+        document
+            .getElementById('modalDireccion')
+            .innerText =
+            p.direccion_oficina ||
+            'No disponible';
+
+        document
+            .getElementById('modalCorreo')
+            .innerText =
+            p.correo ||
+            'Pendiente de confirmar';
+
+        document
+            .getElementById('modalCuerpoCompleto')
+            .innerText =
+            p.cuerpo_academico ||
+            'No disponible';
+
+        document
+            .getElementById('modalLaboratorio')
+            .innerText =
+            p.laboratorio_enfoque ||
+            'No disponible';
+
+        const contenedorTecnologias =
+            document.getElementById(
+                'modalTecnologias'
+            );
+
+        if (p.tecnologias) {
+
+            contenedorTecnologias.innerHTML =
+                p.tecnologias
+                    .split(',')
+                    .map(t => `
+
+                        <span class="badge">
+                            ${t.trim()}
+                        </span>
+
+                    `)
+                    .join('');
+
+        } else {
+
+            contenedorTecnologias.innerHTML =
+                '<span style="color:#64748b;">No disponible</span>';
+
+        }
+
+        const contenedorLineas =
+            document.getElementById(
+                'modalLineas'
+            );
+
+        if (
+            data.lineasInvestigacion &&
+            data.lineasInvestigacion.length > 0
+        ) {
+
+            contenedorLineas.innerHTML =
+                data.lineasInvestigacion
+                    .map(l => `
+
+                        <div class="linea-investigacion">
+
+                            <strong>
+                                ${l.nombre}
+                            </strong>
+
+                            ${
+                                l.descripcion
+                                    ? `
+                                        <p>
+                                            ${l.descripcion}
+                                        </p>
+                                      `
+                                    : ''
+                            }
+
+                        </div>
+
+                    `)
+                    .join('');
+
+        } else {
+
+            contenedorLineas.innerHTML =
+                '<span style="color:#64748b;">No hay líneas de investigación registradas.</span>';
+
+        }
+
+        const contenedorPublicaciones =
+            document.getElementById(
+                'modalPublicaciones'
+            );
+
+        if (
+            data.publicaciones &&
+            data.publicaciones.length > 0
+        ) {
+
+            contenedorPublicaciones.innerHTML =
+                data.publicaciones
+                    .map(pub => `
+
+                        <div class="publicacion">
+
+                            <div class="publicacion-titulo">
+                                ${pub.titulo}
+                            </div>
+
+                            <div class="publicacion-info">
+
+                                ${pub.año ? `Año: ${pub.año}` : ''}
+
+                                ${pub.revista
+                                    ? ` | ${pub.revista}`
+                                    : ''
+                                }
+
+                                ${
+                                    pub.citas !== null &&
+                                    pub.citas !== undefined
+                                        ? ` | Citas: ${pub.citas}`
+                                        : ''
+                                }
+
+                            </div>
+
+                            ${
+                                pub.autores
+                                    ? `
+                                        <div class="publicacion-info">
+                                            ${pub.autores}
+                                        </div>
+                                      `
+                                    : ''
+                            }
+
+                            ${
+                                pub.enlace
+                                    ? `
+                                        <a
+                                            class="publicacion-link"
+                                            href="${pub.enlace}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Ver publicación
+                                        </a>
+                                      `
+                                    : ''
+                            }
+
+                        </div>
+
+                    `)
+                    .join('');
+
+        } else {
+
+            contenedorPublicaciones.innerHTML =
+                '<span style="color:#64748b;">No hay publicaciones registradas.</span>';
+
+        }
+
+        const contenedorRutas =
+            document.getElementById(
+                'modalRutas'
+            );
+
+        if (
+            data.rutasRelacionadas &&
+            data.rutasRelacionadas.length > 0
+        ) {
+
+            contenedorRutas.innerHTML =
+                data.rutasRelacionadas
+                    .map(r => `
+
+                        <span class="badge badge-yellow">
+                            ${r.titulo}
+                        </span>
+
+                    `)
+                    .join('');
+
+        } else {
+
+            contenedorRutas.innerHTML =
+                '<span style="color:#64748b;">Sin rutas asociadas</span>';
+
+        }
+
+        const scholar =
+            document.getElementById(
+                'modalScholar'
+            );
+
+        let enlaces = '';
+
+        if (p.google_scholar_url) {
+
+            enlaces += `
+
+                <a
+                    class="link-btn"
+                    href="${p.google_scholar_url}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Ver Google Scholar
+                </a>
+
+            `;
+
+        }
+
+        if (p.perfil_url) {
+
+            enlaces += `
+
+                <a
+                    class="link-btn"
+                    href="${p.perfil_url}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="margin-left:6px;"
+                >
+                    Ver perfil institucional
+                </a>
+
+            `;
+
+        }
+
+        scholar.innerHTML =
+            enlaces;
+
+        const overlay =
+            document.getElementById('modalProfesor');
+
+        overlay.classList.remove('hidden');
+
+        // Reinicia el acordeón: solo la primera sección abierta
+        document
+            .querySelectorAll('#modalProfesor .acordeon-seccion')
+            .forEach((seccion, indice) => {
+                seccion.open = indice === 0;
+            });
+
+        // Asegura que el modal siempre inicie desde arriba
+        const contenido =
+            overlay.querySelector('.modal-content');
+
+        if (contenido) {
+            contenido.scrollTop = 0;
+        }
+
+        overlay.scrollTop = 0;
+
+        requestAnimationFrame(() => {
+            if (contenido) {
+                contenido.scrollTop = 0;
+            }
+        });
+
+    } catch (err) {
+
+        console.error(
+            'Error al obtener datos del profesor:',
+            err
+        );
+
+        alert(
+            'Error al obtener datos del profesor.'
+        );
+
+    }
+}
+
+function cerrarModal() {
+
+    document
+        .getElementById('modalProfesor')
+        .classList
+        .add('hidden');
+
+}
+
+function cerrarModalFondo(e) {
+
+    if (
+        e.target.id ===
+        'modalProfesor'
+    ) {
+
+        cerrarModal();
+
+    }
+}
+
+async function analizarFortalezas() {
+
+    const texto =
+        document
+            .getElementById('inputFortalezas')
+            .value;
+
+    if (!texto.trim()) {
+
+        return alert(
+            'Escribe alguna materia o habilidad.'
+        );
+
+    }
+
+    try {
+
+        const res =
+            await fetch(
+                `${API}/analizar-fortalezas`,
+                {
+                    method:'POST',
+
+                    headers:{
+                        'Content-Type':
+                            'application/json'
+                    },
+
+                    body:JSON.stringify({
+                        fortalezas:texto
+                    })
+                }
+            );
+
+        if (!res.ok) {
+
+            throw new Error(
+                `HTTP ${res.status}`
+            );
+
+        }
+
+        const data =
+            await res.json();
+
+        const badge =
+            document.getElementById(
+                'badgeCoincidencia'
+            );
+
+        badge.classList
+            .remove('hidden');
+
+        const porcentaje =
+            data.porcentajeCoincidencia || 0;
+
+        const circulo =
+            document.getElementById('matchCircle');
+
+        circulo.style.setProperty('--pct', porcentaje);
+        circulo.innerText = `${porcentaje}%`;
+
+        const textoMatch =
+            document.getElementById('matchTexto');
+
+        if (
+            data.conceptosDetectados &&
+            data.conceptosDetectados.length > 0
+        ) {
+
+            textoMatch.innerText =
+                `Coincidencia con: ${
+                    data.conceptosDetectados
+                        .slice(0,3)
+                        .join(', ')
+                }`;
+
+        } else {
+
+            textoMatch.innerText =
+                'Ruta sugerida identificada';
+
+        }
+
+        mostrarResultado(
+            data.rutaSugerida,
+            data.profesoresRecomendados,
+            data.rutasCoincidentes || [],
+            data.materiasDetectadas || []
+        );
+
+    } catch (err) {
+
+        console.error(
+            'Error al analizar intereses:',
+            err
+        );
+
+        alert(
+            'Error al analizar intereses.'
+        );
+
+    }
+}
+
+function mostrarResultado(
+    ruta,
+    profesores,
+    rutasCoincidentes,
+    materiasDetectadas
+) {
+
+    if (!ruta) {
+        return;
+    }
+
+    document
+        .getElementById('vistaDetalle')
+        .classList
+        .remove('hidden');
+
+    document
+        .getElementById('rutaTitulo')
+        .innerText =
+        ruta.titulo ||
+        'Sin Título';
+
+    const iconoEl =
+        document.getElementById('rutaIcono');
+
+    if (iconoEl) {
+        iconoEl.innerText = iconoParaRuta(ruta.titulo);
+    }
+
+    document
+        .getElementById('rutaDescripcion')
+        .innerText =
+        ruta.descripcion ||
+        '';
+
+    const materiasBox =
+        document.getElementById('materiasInfluyentes');
+
+    if (
+        materiasDetectadas &&
+        materiasDetectadas.length > 0
+    ) {
+
+        document
+            .getElementById('materiasInfluyentesBadges')
+            .innerHTML =
+
+            materiasDetectadas
+                .map(m => `
+                    <span class="badge">
+                        ${m}
+                    </span>
+                `)
+                .join('');
+
+        materiasBox.classList.remove('hidden');
+
+    } else {
+
+        materiasBox.classList.add('hidden');
+
+    }
+
+    if (
+        !profesores ||
+        profesores.length === 0
+    ) {
+
+        document
+            .getElementById('contenedorProfesores')
+            .innerHTML = `
+
+                <p style="
+                    font-size:.85rem;
+                    color:#64748b;
+                ">
+                    No hay investigadores del IICO
+                    asignados directamente a esta ruta.
+                </p>
+
+            `;
+
+    } else {
+
+        document
+            .getElementById('contenedorProfesores')
+            .innerHTML =
+
+            profesores.map(p => `
+
+                <div
+                    class="profesor-box"
+                    onclick="abrirModalProfesor(${p.id})"
+                >
+
+                    <strong style="
+                        color:#0f172a;
+                        font-size:.95rem;
+                    ">
+                        ${p.nombre}
+                    </strong>
+
+                    <br>
+
+                    <span style="
+                        font-size:.85rem;
+                        color:#475569;
+                    ">
+
+                        <strong>
+                            Cuerpo Académico:
+                        </strong>
+
+                        ${
+                            p.cuerpo_academico ||
+                            'No disponible'
+                        }
+
+                    </span>
+
+                    <br>
+
+                    <span style="
+                        font-size:.85rem;
+                        color:#475569;
+                    ">
+
+                        <strong>
+                            Laboratorio:
+                        </strong>
+
+                        ${
+                            p.laboratorio_enfoque ||
+                            'No disponible'
+                        }
+
+                    </span>
+
+                    ${
+                        Number(p.publicaciones_destacadas_count) > 0
+                            ? `
+                                <div class="pub-indicador">
+                                    📄 ${p.publicaciones_destacadas_count} publicación(es) destacada(s)
+                                </div>
+                              `
+                            : ''
+                    }
+
+                </div>
+
+            `).join('');
+
+    }
+
+    const trabajosArray =
+        (ruta.trabajos_sugeridos || '')
+            .split(',')
+            .map(t => t.trim())
+            .filter(Boolean);
+
+    document
+        .getElementById('trabajosLista')
+        .innerHTML =
+
+        trabajosArray.length
+            ? trabajosArray
+                .map(t => `
+
+                    <div class="puesto-card">
+                        <span class="puesto-card-icono">💼</span>
+                        <span>${t}</span>
+                    </div>
+
+                `)
+                .join('')
+            : '<span style="color:#64748b;font-size:.85rem;">N/A</span>';
+
+    const competenciasArray =
+        (ruta.que_aprender || '')
+            .split(',')
+            .map(c => c.trim())
+            .filter(Boolean);
+
+    document
+        .getElementById('queAprenderTexto')
+        .innerHTML =
+
+        competenciasArray.length
+            ? competenciasArray
+                .map(c => `
+                    <span class="competencia-chip">${c}</span>
+                `)
+                .join('')
+            : '<span style="color:#64748b;font-size:.85rem;">N/A</span>';
+
+    if (ruta.certificaciones) {
+
+        document
+            .getElementById('certificacionesBadges')
+            .innerHTML =
+
+            ruta.certificaciones
+                .split(',')
+                .map(c => {
+
+                    const nombre = c.trim();
+
+                    return `
+                        <span
+                            class="badge badge-yellow badge-cert"
+                            onclick="abrirModalCert('${encodeURIComponent(nombre)}')"
+                        >
+                            ${nombre}
+                        </span>
+                    `;
+
+                })
+                .join('');
+
+    } else {
+
+        document
+            .getElementById('certificacionesBadges')
+            .innerHTML =
+            'N/A';
+
+    }
+
+    document
+        .getElementById('inglesBadge')
+        .innerHTML = `
+
+            <span class="badge badge-green">
+
+                ${
+                    ruta.nivel_ingles ||
+                    'B2'
+                }
+
+            </span>
+
+        `;
+
+    const rutasMultiples =
+        document.getElementById(
+            'rutasMultiples'
+        );
+
+    if (
+        rutasCoincidentes &&
+        rutasCoincidentes.length > 1
+    ) {
+
+        rutasMultiples.innerHTML = `
+
+            <div class="section-title">
+                Otras áreas que también
+                coinciden con tus intereses
+            </div>
+
+            <p style="font-size:.78rem;color:#64748b;margin-bottom:10px;margin-top:-6px;">
+                Haz clic en cualquiera de estas áreas para ver su detalle completo.
+            </p>
+
+            ${
+                rutasCoincidentes
+                    .slice(1)
+                    .map(r => `
+
+                        <div
+                            class="ruta-resultado"
+                            onclick="cargarDetalleRuta(${r.id})"
+                        >
+
+                            <div class="match-circle-sm" style="--pct:${r.porcentaje || 0};">
+                                ${r.porcentaje || 0}%
+                            </div>
+
+                            <div class="ruta-resultado-texto">
+
+                                <h4>
+                                    ${iconoParaRuta(r.titulo)} ${r.titulo}
+                                </h4>
+
+                                <p>
+                                    ${r.descripcion}
+                                </p>
+
+                                <div class="ruta-score">
+
+                                    Coincidencias detectadas:
+
+                                    ${
+                                        r.conceptosDetectados &&
+                                        r.conceptosDetectados.length
+                                            ? r.conceptosDetectados.join(', ')
+                                            : 'Relacionada con tu perfil'
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    `)
+                    .join('')
+            }
+
+        `;
+
+    } else {
+
+        rutasMultiples.innerHTML =
+            '';
+
+    }
+
+    document
+        .getElementById('vistaDetalle')
+        .scrollIntoView({
+            behavior:'smooth',
+            block:'start'
+        });
+}
+
+function toggleBot() {
+
+    const ventana =
+        document.getElementById(
+            'botWindow'
+        );
+
+    ocultarBurbujaBot();
+
+    ventana
+        .classList
+        .toggle('hidden');
+
+    if (
+        !ventana
+            .classList
+            .contains('hidden')
+    ) {
+
+        setTimeout(() => {
+
+            document
+                .getElementById('botInput')
+                .focus();
+
+        },100);
+
+    }
+}
+
+/* =========================================================
+   BURBUJA NO INVASIVA DEL ASISTENTE
+========================================================= */
+
+function ocultarBurbujaBot() {
+
+    const burbuja =
+        document.getElementById('botTooltip');
+
+    if (burbuja) {
+        burbuja.classList.add('hidden');
+    }
+}
+
+function cerrarBurbujaBot(event) {
+
+    if (event) {
+        event.stopPropagation();
+    }
+
+    ocultarBurbujaBot();
+
+    try {
+        sessionStorage.setItem('bot_burbuja_vista', '1');
+    } catch (e) {}
+
+}
+
+function mostrarBurbujaBotSiCorresponde() {
+
+    let yaVista = false;
+
+    try {
+        yaVista = sessionStorage.getItem('bot_burbuja_vista') === '1';
+    } catch (e) {}
+
+    if (yaVista) {
+        return;
+    }
+
+    const ventanaBot =
+        document.getElementById('botWindow');
+
+    if (
+        ventanaBot &&
+        !ventanaBot.classList.contains('hidden')
+    ) {
+        return;
+    }
+
+    const burbuja =
+        document.getElementById('botTooltip');
+
+    if (!burbuja) {
+        return;
+    }
+
+    burbuja.classList.remove('hidden');
+
+    setTimeout(() => {
+
+        try {
+            sessionStorage.setItem('bot_burbuja_vista', '1');
+        } catch (e) {}
+
+        burbuja.classList.add('hidden');
+
+    }, 9000);
+}
+
+function manejarEnterBot(event) {
+
+    if (
+        event.key ===
+        'Enter'
+    ) {
+
+        event.preventDefault();
+
+        enviarBot();
+
+    }
+}
+
+function usarSugerencia(texto) {
+
+    document
+        .getElementById('botInput')
+        .value =
+        texto;
+
+    enviarBot();
+}
+
+function agregarMensajeBot(
+    texto,
+    tipo
+) {
+
+    const contenedor =
+        document.getElementById(
+            'botMessages'
+        );
+
+    const mensaje =
+        document.createElement(
+            'div'
+        );
+
+    mensaje.className =
+        `bot-message ${tipo}`;
+
+    mensaje.innerText =
+        texto;
+
+    contenedor.appendChild(
+        mensaje
+    );
+
+    contenedor.scrollTop =
+        contenedor.scrollHeight;
+}
+
+async function enviarBot() {
+
+    const input =
+        document.getElementById(
+            'botInput'
+        );
+
+    const texto =
+        input.value.trim();
+
+    if (!texto) {
+        return;
+    }
+
+    agregarMensajeBot(
+        texto,
+        'user'
+    );
+
+    input.value = '';
+
+    agregarMensajeBot(
+        'Estoy buscando información en la base de datos...',
+        'bot'
+    );
+
+    const mensajes =
+        document.getElementById(
+            'botMessages'
+        );
+
+    const ultimoMensaje =
+        mensajes.lastElementChild;
+
+    try {
+
+        const res =
+            await fetch(
+                `${API}/bot`,
+                {
+                    method:'POST',
+
+                    headers:{
+                        'Content-Type':
+                            'application/json'
+                    },
+
+                    body:JSON.stringify({
+                        mensaje:texto
+                    })
+                }
+            );
+
+        if (!res.ok) {
+
+            throw new Error(
+                `HTTP ${res.status}`
+            );
+
+        }
+
+        const data =
+            await res.json();
+
+        ultimoMensaje.innerText =
+            data.respuesta ||
+            'No pude encontrar una respuesta.';
+
+    } catch (err) {
+
+        console.error(
+            'Error en el bot:',
+            err
+        );
+
+        ultimoMensaje.innerText =
+            'No pude comunicarme con el servidor. Verifica que PostgreSQL y el servidor de Node.js estén funcionando.';
+
+    }
+
+    mensajes.scrollTop =
+        mensajes.scrollHeight;
+}
+
+cargarPerfil();
+cargarRutas();
+cargarMateriasChips();
+
+setTimeout(mostrarBurbujaBotSiCorresponde, 3500);
+
+</script>
+
+</body>
+</html>
