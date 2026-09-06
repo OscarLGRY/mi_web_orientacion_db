@@ -247,13 +247,7 @@ function puntuarRuta(texto, ruta) {
 
 /* =========================================================
    MATERIAS DEL PLAN DE ESTUDIOS
-   =========================================================
-   Detecta qué materias del plan de estudios menciona el
-   usuario en su texto (por nombre exacto o por palabras
-   clave asociadas a la materia), y calcula el aporte extra
-   que esas materias dan a cada ruta laboral según la tabla
-   materia_ruta.
-========================================================= */
+   ========================================================= */
 
 function obtenerMateriasCoincidentes(texto, materias) {
     const textoLimpio = normalizarTexto(texto);
@@ -315,17 +309,6 @@ function bonusPorMaterias(ruta, materiasCoincidentes, materiaRutaRows) {
 
 /* =========================================================
    BUSCADOR DE PROFESORES
-   =========================================================
-   
-   IMPORTANTE:
-   - Nombre completo exacto = máxima prioridad.
-   - Nombre + apellido exactos = prioridad alta.
-   - Si solamente coincide un nombre que pertenece a varios
-     profesores, NO elige arbitrariamente.
-   - Si "Miguel Ángel" corresponde a dos profesores,
-     devuelve ambos como ambiguos.
-   - Si "Miguel Ángel Lastras" corresponde exactamente a uno,
-     devuelve ese profesor.
 ========================================================= */
 
 function obtenerPartesNombre(nombre) {
@@ -378,18 +361,10 @@ function buscarProfesor(texto, profesores) {
         let puntuacion = 0;
         let tipoCoincidencia = '';
 
-        /* -------------------------------------------------
-           1. NOMBRE COMPLETO EXACTO
-        ------------------------------------------------- */
-
         if (textoNormalizado.includes(nombreNormalizado)) {
             puntuacion = 10000;
             tipoCoincidencia = 'nombre_completo';
         }
-
-        /* -------------------------------------------------
-           2. NOMBRE COMPLETO COMO SECUENCIA DE PALABRAS
-        ------------------------------------------------- */
 
         if (
             puntuacion === 0 &&
@@ -398,15 +373,6 @@ function buscarProfesor(texto, profesores) {
             puntuacion = 9000;
             tipoCoincidencia = 'secuencia_nombre_completo';
         }
-
-        /* -------------------------------------------------
-           3. NOMBRE + APELLIDO
-           
-           Esto permite encontrar:
-           "Miguel Lastras"
-           aunque el nombre registrado sea:
-           "Miguel Ángel Lastras"
-        ------------------------------------------------- */
 
         if (puntuacion === 0 && partesNombre.length >= 2) {
             const combinaciones = [];
@@ -433,10 +399,6 @@ function buscarProfesor(texto, profesores) {
             }
         }
 
-        /* -------------------------------------------------
-           4. DOS O MÁS PARTES DEL NOMBRE
-        ------------------------------------------------- */
-
         if (puntuacion === 0) {
             const partesEncontradas = partesNombre.filter(parte =>
                 tokensTexto.includes(parte)
@@ -447,13 +409,6 @@ function buscarProfesor(texto, profesores) {
                 tipoCoincidencia = 'varias_partes';
             }
         }
-
-        /* -------------------------------------------------
-           5. UNA SOLA PARTE
-           
-           SOLO damos una coincidencia débil.
-           Más adelante se verifica si hay ambigüedad.
-        ------------------------------------------------- */
 
         if (puntuacion === 0) {
             const partesEncontradas = partesNombre.filter(parte =>
@@ -497,10 +452,6 @@ function buscarProfesor(texto, profesores) {
         candidato => candidato.puntuacion === mejorPuntuacion
     );
 
-    /* -----------------------------------------------------
-       SI HAY UN NOMBRE COMPLETO EXACTO, GANÓ.
-    ----------------------------------------------------- */
-
     const coincidenciasExactas = candidatos.filter(
         candidato =>
             candidato.tipoCoincidencia === 'nombre_completo' ||
@@ -516,10 +467,6 @@ function buscarProfesor(texto, profesores) {
         };
     }
 
-    /* -----------------------------------------------------
-       SI HAY MÁS DE UNA COINCIDENCIA EXACTA, ES AMBIGUO.
-    ----------------------------------------------------- */
-
     if (coincidenciasExactas.length > 1) {
         return {
             encontrado: false,
@@ -528,11 +475,6 @@ function buscarProfesor(texto, profesores) {
             candidatos: coincidenciasExactas.map(x => x.profesor)
         };
     }
-
-    /* -----------------------------------------------------
-       SI ES UNA COINCIDENCIA DE UNA SOLA PARTE Y HAY
-       VARIOS PROFESORES, NO ELEGIMOS AL PRIMERO.
-    ----------------------------------------------------- */
 
     if (
         mejores.length > 1 &&
@@ -545,20 +487,6 @@ function buscarProfesor(texto, profesores) {
             candidatos: mejores.map(x => x.profesor)
         };
     }
-
-    /* -----------------------------------------------------
-       SI VARIOS PROFESORES COMPARTEN EL MISMO NOMBRE BASE,
-       POR EJEMPLO:
-
-       Miguel Ángel González
-       Miguel Ángel Lastras
-
-       y el usuario escribe solamente:
-
-       "Miguel Ángel"
-
-       NO escogemos arbitrariamente.
-    ----------------------------------------------------- */
 
     if (mejores.length > 1) {
         const nombresCandidatos = mejores.map(x => x.partesNombre);
@@ -578,10 +506,6 @@ function buscarProfesor(texto, profesores) {
             };
         }
     }
-
-    /* -----------------------------------------------------
-       SI SOLO QUEDA UN CANDIDATO, LO DEVOLVEMOS.
-    ----------------------------------------------------- */
 
     return {
         encontrado: true,
@@ -640,10 +564,6 @@ function esConsultaSobreProfesor(texto) {
         t.includes('quien enseña')
     );
 }
-
-/* =========================================================
-   RESPUESTA DE PROFESOR
-========================================================= */
 
 function obtenerRespuestaProfesor(p) {
     let respuesta =
@@ -1034,49 +954,41 @@ app.get('/api/oportunidades', async (req, res) => {
     }
 });
 
-// Endpoint en tu servidor Node.js (Express + PostgreSQL)
-app.post('/api/oportunidades/:id/desactivar', async (req, res) => {
-    const { id } = req.params;
-    const { clave_acceso } = req.body;
-
-    if (!clave_acceso) {
-        return res.status(400).json({ error: 'Debes proporcionar la clave de acceso.' });
-    }
+app.post('/api/oportunidades', async (req, res) => {
+    const {
+        profesor_id,
+        clave_acceso,
+        tipo,
+        titulo_tema,
+        descripcion,
+        requisitos,
+        vacantes
+    } = req.body;
 
     try {
-        // 1. Obtener la clave de acceso asignada al profesor creador de la vacante
-        const consulta = await pool.query(
-            `SELECT o.id, p.clave_acceso 
-             FROM oportunidades_academicas o 
-             JOIN profesores p ON o.profesor_id = p.id 
-             WHERE o.id = $1`,
-            [id]
-        );
-
-        if (consulta.rows.length === 0) {
-            return res.status(404).json({ error: 'La vacante solicitada no existe.' });
+        if (!profesor_id || !clave_acceso || !tipo || !titulo_tema) {
+            return res.status(400).json({
+                error: 'Faltan campos obligatorios.'
+            });
         }
 
-        const vacante = consulta.rows[0];
+        const profesor = await pool.query(`
+            SELECT clave_acceso
+            FROM profesores
+            WHERE id = $1
+        `, [profesor_id]);
 
-        // 2. Verificar que la clave ingresada coincida
-        if (vacante.clave_acceso !== clave_acceso.trim()) {
-            return res.status(401).json({ error: 'Clave de acceso incorrecta.' });
+        if (profesor.rows.length === 0) {
+            return res.status(404).json({
+                error: 'Profesor no encontrado.'
+            });
         }
 
-        // 3. Marcar la vacante como inactiva (o eliminarla)
-        await pool.query(
-            'UPDATE oportunidades_academicas SET activa = FALSE WHERE id = $1',
-            [id]
-        );
-
-        return res.json({ mensaje: 'La vacante fue desactivada correctamente.' });
-
-    } catch (err) {
-        console.error('Error al desactivar vacante:', err);
-        return res.status(500).json({ error: 'Error interno en el servidor.' });
-    }
-});
+        if (!profesor.rows[0].clave_acceso || profesor.rows[0].clave_acceso.trim() !== String(clave_acceso).trim()) {
+            return res.status(401).json({
+                error: 'Clave de acceso incorrecta.'
+            });
+        }
 
         const nueva = await pool.query(`
             INSERT INTO oportunidades_academicas (
@@ -1085,9 +997,10 @@ app.post('/api/oportunidades/:id/desactivar', async (req, res) => {
                 titulo_tema,
                 descripcion,
                 requisitos,
-                vacantes
+                vacantes,
+                activa
             )
-            VALUES ($1, $2, $3, $4, $5, $6)
+            VALUES ($1, $2, $3, $4, $5, $6, TRUE)
             RETURNING *
         `, [
             profesor_id,
@@ -1116,6 +1029,12 @@ app.post('/api/oportunidades/:id/desactivar', async (req, res) => {
     const { clave_acceso } = req.body;
 
     try {
+        if (!clave_acceso) {
+            return res.status(400).json({
+                error: 'Debes ingresar tu clave de acceso.'
+            });
+        }
+
         const oportunidad = await pool.query(`
             SELECT o.id, p.clave_acceso
             FROM oportunidades_academicas o
@@ -1129,7 +1048,9 @@ app.post('/api/oportunidades/:id/desactivar', async (req, res) => {
             });
         }
 
-        if (oportunidad.rows[0].clave_acceso !== clave_acceso) {
+        const claveRegistrada = oportunidad.rows[0].clave_acceso;
+
+        if (!claveRegistrada || claveRegistrada.trim() !== String(clave_acceso).trim()) {
             return res.status(401).json({
                 error: 'Clave de acceso incorrecta.'
             });
@@ -1338,10 +1259,6 @@ app.post('/api/bot', async (req, res) => {
 
         const texto = normalizarTexto(mensaje);
 
-        /* -------------------------------------------------
-           CARGAR DATOS
-        ------------------------------------------------- */
-
         const rutasRes = await pool.query(`
             SELECT *
             FROM rutas_laborales
@@ -1389,10 +1306,6 @@ app.post('/api/bot', async (req, res) => {
             materias
         );
 
-        /* =================================================
-           SALUDO
-        ================================================= */
-
         if (
             texto === 'hola' ||
             texto === 'buenas' ||
@@ -1407,13 +1320,6 @@ app.post('/api/bot', async (req, res) => {
                 tipo: 'saludo'
             });
         }
-
-        /* =================================================
-           AYUDA
-
-           IMPORTANTE:
-           NO se menciona absolutamente nada económico.
-        ================================================= */
 
         if (
             texto.includes('que puedes hacer') ||
@@ -1438,13 +1344,6 @@ app.post('/api/bot', async (req, res) => {
                 tipo: 'ayuda'
             });
         }
-
-        /* =================================================
-           CONSULTA ECONÓMICA
-
-           LOS DATOS ECONÓMICOS SOLO SE PROCESAN AQUÍ
-           CUANDO EL USUARIO PREGUNTA DIRECTAMENTE.
-        ================================================= */
 
         if (esConsultaEconomica(texto)) {
 
@@ -1556,29 +1455,11 @@ app.post('/api/bot', async (req, res) => {
             });
         }
 
-        /* =================================================
-           BUSCAR PROFESOR MENCIONADO
-        ================================================= */
-
         const resultadoProfesor =
             buscarProfesor(
                 mensaje,
                 profesores
             );
-
-        /* =================================================
-           PROFESOR AMBIGUO
-           
-           EJEMPLO:
-
-           "Me gusta la clase de Miguel Ángel"
-
-           Si existen:
-           - Miguel Ángel Lastras
-           - Miguel Ángel Pérez
-
-           NO escogemos uno.
-        ================================================= */
 
         if (
             resultadoProfesor.ambiguo &&
@@ -1612,10 +1493,6 @@ app.post('/api/bot', async (req, res) => {
                     resultadoProfesor.candidatos
             });
         }
-
-        /* =================================================
-           PROFESOR ENCONTRADO
-        ================================================= */
 
         if (
             resultadoProfesor.encontrado &&
@@ -1658,10 +1535,6 @@ app.post('/api/bot', async (req, res) => {
                 profesor: profesorEncontrado
             });
         }
-
-        /* =================================================
-           CONSULTA GENERAL SOBRE PROFESORES
-        ================================================= */
 
         if (esConsultaSobreProfesor(texto)) {
 
@@ -1735,10 +1608,6 @@ app.post('/api/bot', async (req, res) => {
                 });
             }
         }
-
-        /* =================================================
-           RUTAS PROFESIONALES
-        ================================================= */
 
         const resultadosRuta =
             rutas
@@ -1914,10 +1783,6 @@ app.post('/api/bot', async (req, res) => {
             });
         }
 
-        /* =================================================
-           LÍNEAS DE INVESTIGACIÓN
-        ================================================= */
-
         const palabrasConsulta =
             palabrasSignificativas(texto);
 
@@ -1982,10 +1847,6 @@ app.post('/api/bot', async (req, res) => {
             });
         }
 
-        /* =================================================
-           PUBLICACIONES
-        ================================================= */
-
         const publicacionesEncontradas =
             publicaciones
                 .map(pub => {
@@ -2049,10 +1910,6 @@ app.post('/api/bot', async (req, res) => {
                 tipo: 'publicaciones'
             });
         }
-
-        /* =================================================
-           SIN RESULTADO
-        ================================================= */
 
         return res.json({
             respuesta:

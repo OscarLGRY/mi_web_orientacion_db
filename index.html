@@ -227,6 +227,13 @@ header p{
     margin-top:15px;
 }
 
+.grid-oportunidades{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:16px;
+    margin-top:15px;
+}
+
 .prof-card{
     background:#fff;
     border:1px solid var(--border);
@@ -344,29 +351,31 @@ textarea:focus{
     border:1px solid var(--border);
     border-left:4px solid var(--primary);
     border-radius:8px;
-    padding:14px 16px;
+    padding:16px;
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:10px;
 }
 
 .oportunidad-card h4{
     color:var(--primary-dark);
-    font-size:1rem;
+    font-size:1.02rem;
 }
 
 .oportunidad-card p{
-    font-size:.85rem;
+    font-size:.88rem;
     color:#334155;
-    line-height:1.4;
+    line-height:1.45;
 }
 
 .oportunidad-meta{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
     border-top:1px solid var(--border-soft);
-    padding-top:10px;
+    padding-top:12px;
     margin-top:4px;
 }
 
@@ -1542,7 +1551,7 @@ ul.item-list{
         Consulta las vacantes publicadas por los investigadores del IICO, o publica una si eres profesor.
     </p>
 
-    <div id="contenedorOportunidades" class="grid-profesores"></div>
+    <div id="contenedorOportunidades" class="grid-oportunidades"></div>
 
 </div>
 
@@ -2259,7 +2268,7 @@ const INFO_PUESTOS = [
         descripcion: 'Ingeniero integrado en la infraestructura de fabricación limpia (Cleanrooms) enfocado en la integración de materiales avanzados y fotolitografía para la producción de microchips.', 
         funciones: [
             'Supervisar secuencias complejas de fotolitografía, grabado químico, dopaje por implantación iónica y crecimiento epitaxial.',
-            'Operar bajo protocolos estrictos de Sala Limpia (Cleanrooms ISO Class 5 a 7).',
+            'Operar bajo protocolos strictly de Sala Limpia (Cleanrooms ISO Class 5 a 7).',
             'Evaluar la homogeneidad de deposición en obleas de silicio u otros sustratos (GaN, GaAs).',
             'Diagnosticar fallas estructurales a escala microscópica en la oblea.'
         ], 
@@ -3648,8 +3657,8 @@ async function cargarOportunidades() {
 
                         <div class="oportunidad-meta">
 
-                            <div>
-                                <strong style="font-size:.85rem;display:block;">
+                            <div style="flex:1;min-width:140px;">
+                                <strong style="font-size:.85rem;display:block;color:#0f172a;">
                                     ${op.profesor_nombre}
                                 </strong>
                                 <span style="font-size:.75rem;color:#64748b;">
@@ -3657,13 +3666,24 @@ async function cargarOportunidades() {
                                 </span>
                             </div>
 
-                            <a
-                                href="mailto:${op.profesor_correo}?subject=${encodeURIComponent('Consulta sobre ' + op.titulo_tema)}"
-                                class="link-btn"
-                                style="margin-top:0;padding:8px 12px;font-size:.78rem;"
-                            >
-                                Contactar
-                            </a>
+                            <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+                                <a
+                                    href="mailto:${op.profesor_correo}?subject=${encodeURIComponent('Consulta sobre ' + op.titulo_tema)}"
+                                    class="link-btn"
+                                    style="margin-top:0;padding:7px 12px;font-size:.78rem;white-space:nowrap;"
+                                >
+                                    Contactar
+                                </a>
+
+                                <button
+                                    type="button"
+                                    class="btn-action"
+                                    onclick="desactivarOportunidad(${op.id})"
+                                    style="margin-top:0;padding:7px 12px;font-size:.78rem;background:#b42318;white-space:nowrap;"
+                                >
+                                    Borrar
+                                </button>
+                            </div>
 
                         </div>
 
