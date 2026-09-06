@@ -339,6 +339,37 @@ textarea:focus{
     border:1px solid #BFE6DC;
 }
 
+.oportunidad-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-left:4px solid var(--primary);
+    border-radius:8px;
+    padding:14px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.oportunidad-card h4{
+    color:var(--primary-dark);
+    font-size:1rem;
+}
+
+.oportunidad-card p{
+    font-size:.85rem;
+    color:#334155;
+    line-height:1.4;
+}
+
+.oportunidad-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top:1px solid var(--border-soft);
+    padding-top:10px;
+    margin-top:4px;
+}
+
 .profesor-box{
     background:#f8fafc;
     border-left:4px solid var(--primary);
@@ -1326,6 +1357,10 @@ ul.item-list{
         Directorio de Investigadores IICO
     </button>
 
+    <button class="tab-btn" id="btnTab4" onclick="cambiarTab(4)">
+        Prácticas y Servicio Social
+    </button>
+
 </div>
 
 <div id="vistaDirecta" class="card">
@@ -1386,6 +1421,28 @@ ul.item-list{
     </p>
 
     <div id="contenedorDirectorio" class="grid-profesores"></div>
+
+</div>
+
+<div id="vistaOportunidades" class="card hidden">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+
+        <div class="section-title" style="margin-bottom:0;">
+            Prácticas Profesionales y Servicio Social
+        </div>
+
+        <button class="btn-action" style="margin-top:0;" onclick="abrirModalPublicarOportunidad()">
+            Publicar una vacante
+        </button>
+
+    </div>
+
+    <p style="font-size:.88rem;color:#64748b;margin-top:6px;">
+        Consulta las vacantes publicadas por los investigadores del IICO, o publica una si eres profesor.
+    </p>
+
+    <div id="contenedorOportunidades" class="grid-profesores"></div>
 
 </div>
 
@@ -1747,6 +1804,21 @@ ul.item-list{
 
         </details>
 
+        <details class="acordeon-seccion" id="acordeonOportunidades">
+
+            <summary class="acordeon-cabecera">
+                <span class="section-title" style="margin-bottom:0;">
+                    🎓 Prácticas y Servicio Social
+                </span>
+                <span class="acordeon-flecha">▾</span>
+            </summary>
+
+            <div class="acordeon-cuerpo">
+                <div id="modalOportunidades"></div>
+            </div>
+
+        </details>
+
         <details class="acordeon-seccion">
 
             <summary class="acordeon-cabecera">
@@ -1766,6 +1838,73 @@ ul.item-list{
             id="modalScholar"
             style="text-align:center;margin-top:18px;"
         ></div>
+
+    </div>
+
+</div>
+
+<div
+    id="modalPublicarOportunidad"
+    class="modal-overlay hidden"
+    onclick="cerrarModalPublicarFondo(event)"
+>
+
+    <div class="modal-content" style="max-width:520px;">
+
+        <button class="modal-close" onclick="cerrarModalPublicarOportunidad()">
+            &times;
+        </button>
+
+        <h3 class="modal-title">Publicar Prácticas o Servicio Social</h3>
+
+        <form onsubmit="guardarOportunidad(event)">
+
+            <label style="font-size:.85rem;font-weight:600;display:block;margin-top:14px;">
+                Selecciona tu nombre
+            </label>
+            <select id="pubProfesorId" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;margin-top:5px;">
+                <option value="">-- Elige tu nombre --</option>
+            </select>
+
+            <label style="font-size:.85rem;font-weight:600;display:block;margin-top:14px;">
+                Clave de acceso
+            </label>
+            <input type="password" id="pubClave" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;margin-top:5px;">
+
+            <label style="font-size:.85rem;font-weight:600;display:block;margin-top:14px;">
+                Tipo
+            </label>
+            <select id="pubTipo" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;margin-top:5px;">
+                <option value="practicas">Prácticas Profesionales</option>
+                <option value="servicio_social">Servicio Social</option>
+                <option value="ambos">Ambos</option>
+            </select>
+
+            <label style="font-size:.85rem;font-weight:600;display:block;margin-top:14px;">
+                Tema
+            </label>
+            <input type="text" id="pubTitulo" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;margin-top:5px;">
+
+            <label style="font-size:.85rem;font-weight:600;display:block;margin-top:14px;">
+                Descripción
+            </label>
+            <textarea id="pubDescripcion" style="height:80px;"></textarea>
+
+            <label style="font-size:.85rem;font-weight:600;display:block;margin-top:14px;">
+                Requisitos (opcional)
+            </label>
+            <textarea id="pubRequisitos" style="height:60px;"></textarea>
+
+            <label style="font-size:.85rem;font-weight:600;display:block;margin-top:14px;">
+                Número de vacantes
+            </label>
+            <input type="number" id="pubVacantes" min="1" value="1" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;margin-top:5px;">
+
+            <button type="submit" class="btn-action" style="width:100%;margin-top:18px;">
+                Publicar
+            </button>
+
+        </form>
 
     </div>
 
@@ -2066,6 +2205,11 @@ function cambiarTab(num) {
         .toggle('active', num === 3);
 
     document
+        .getElementById('btnTab4')
+        .classList
+        .toggle('active', num === 4);
+
+    document
         .getElementById('vistaDirecta')
         .classList
         .toggle('hidden', num !== 1);
@@ -2080,8 +2224,17 @@ function cambiarTab(num) {
         .classList
         .toggle('hidden', num !== 3);
 
+    document
+        .getElementById('vistaOportunidades')
+        .classList
+        .toggle('hidden', num !== 4);
+
     if (num === 3) {
         cargarDirectorioCompleto();
+    }
+
+    if (num === 4) {
+        cargarOportunidades();
     }
 }
 
@@ -2703,6 +2856,77 @@ async function abrirModalProfesor(id) {
 
         }
 
+        const contenedorOportunidadesModal =
+            document.getElementById(
+                'modalOportunidades'
+            );
+
+        if (
+            data.oportunidades &&
+            data.oportunidades.length > 0
+        ) {
+
+            contenedorOportunidadesModal.innerHTML =
+                data.oportunidades
+                    .map(o => {
+
+                        const etiqueta =
+                            o.tipo === 'practicas'
+                                ? 'Prácticas Profesionales'
+                                : o.tipo === 'servicio_social'
+                                    ? 'Servicio Social'
+                                    : 'Prácticas o Servicio Social';
+
+                        const claseBadge =
+                            o.tipo === 'practicas'
+                                ? 'badge-yellow'
+                                : o.tipo === 'servicio_social'
+                                    ? 'badge-green'
+                                    : 'badge';
+
+                        return `
+
+                            <div class="publicacion">
+
+                                <span class="badge ${claseBadge}">
+                                    ${etiqueta}
+                                </span>
+
+                                <div class="publicacion-titulo" style="margin-top:6px;">
+                                    ${o.titulo_tema}
+                                </div>
+
+                                <div class="publicacion-info">
+                                    ${o.descripcion || ''}
+                                </div>
+
+                                ${
+                                    o.requisitos
+                                        ? `
+                                            <div class="publicacion-info">
+                                                <strong>Requisitos:</strong> ${o.requisitos}
+                                            </div>
+                                          `
+                                        : ''
+                                }
+
+                                <div class="publicacion-info">
+                                    Vacantes: ${o.vacantes}
+                                </div>
+
+                            </div>
+
+                        `;
+                    })
+                    .join('');
+
+        } else {
+
+            contenedorOportunidadesModal.innerHTML =
+                '<span style="color:#64748b;">Este investigador no tiene prácticas ni servicio social disponibles por el momento.</span>';
+
+        }
+
         const scholar =
             document.getElementById(
                 'modalScholar'
@@ -2807,6 +3031,193 @@ function cerrarModalFondo(e) {
     ) {
 
         cerrarModal();
+
+    }
+}
+
+async function cargarOportunidades() {
+
+    try {
+
+        const res =
+            await fetch(`${API}/oportunidades`);
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const datos = await res.json();
+
+        const contenedor =
+            document.getElementById('contenedorOportunidades');
+
+        if (datos.length === 0) {
+
+            contenedor.innerHTML =
+                '<p style="grid-column:1/-1;color:#64748b;font-size:.9rem;text-align:center;padding:20px;">No hay vacantes de prácticas profesionales o servicio social publicadas por el momento.</p>';
+
+            return;
+        }
+
+        contenedor.innerHTML =
+            datos.map(op => {
+
+                const etiqueta =
+                    op.tipo === 'practicas'
+                        ? 'Prácticas Profesionales'
+                        : op.tipo === 'servicio_social'
+                            ? 'Servicio Social'
+                            : 'Prácticas o Servicio Social';
+
+                const claseBadge =
+                    op.tipo === 'practicas'
+                        ? 'badge-yellow'
+                        : op.tipo === 'servicio_social'
+                            ? 'badge-green'
+                            : 'badge';
+
+                return `
+
+                    <div class="oportunidad-card">
+
+                        <span class="badge ${claseBadge}" style="align-self:flex-start;">
+                            ${etiqueta}
+                        </span>
+
+                        <h4>
+                            ${op.titulo_tema}
+                        </h4>
+
+                        <p>
+                            ${op.descripcion || 'Sin descripción detallada.'}
+                        </p>
+
+                        ${
+                            op.requisitos
+                                ? `<p><strong>Requisitos:</strong> ${op.requisitos}</p>`
+                                : ''
+                        }
+
+                        <div class="oportunidad-meta">
+
+                            <div>
+                                <strong style="font-size:.85rem;display:block;">
+                                    ${op.profesor_nombre}
+                                </strong>
+                                <span style="font-size:.75rem;color:#64748b;">
+                                    ${op.profesor_cuerpo || ''} · Vacantes: ${op.vacantes}
+                                </span>
+                            </div>
+
+                            <a
+                                href="mailto:${op.profesor_correo}?subject=${encodeURIComponent('Consulta sobre ' + op.titulo_tema)}"
+                                class="link-btn"
+                                style="margin-top:0;padding:8px 12px;font-size:.78rem;"
+                            >
+                                Contactar
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                `;
+            }).join('');
+
+    } catch (err) {
+
+        console.error(
+            'Error al cargar oportunidades:',
+            err
+        );
+
+    }
+}
+
+async function abrirModalPublicarOportunidad() {
+
+    try {
+
+        const res =
+            await fetch(`${API}/profesores`);
+
+        const profesores = await res.json();
+
+        const select =
+            document.getElementById('pubProfesorId');
+
+        select.innerHTML =
+            '<option value="">-- Elige tu nombre --</option>' +
+            profesores
+                .map(p => `<option value="${p.id}">${p.nombre}</option>`)
+                .join('');
+
+        document
+            .getElementById('modalPublicarOportunidad')
+            .classList
+            .remove('hidden');
+
+    } catch (err) {
+
+        alert('Error al cargar la lista de profesores.');
+
+    }
+}
+
+function cerrarModalPublicarOportunidad() {
+
+    document
+        .getElementById('modalPublicarOportunidad')
+        .classList
+        .add('hidden');
+
+}
+
+function cerrarModalPublicarFondo(e) {
+
+    if (e.target.id === 'modalPublicarOportunidad') {
+        cerrarModalPublicarOportunidad();
+    }
+
+}
+
+async function guardarOportunidad(event) {
+
+    event.preventDefault();
+
+    const payload = {
+        profesor_id: document.getElementById('pubProfesorId').value,
+        clave_acceso: document.getElementById('pubClave').value,
+        tipo: document.getElementById('pubTipo').value,
+        titulo_tema: document.getElementById('pubTitulo').value,
+        descripcion: document.getElementById('pubDescripcion').value,
+        requisitos: document.getElementById('pubRequisitos').value,
+        vacantes: document.getElementById('pubVacantes').value
+    };
+
+    try {
+
+        const res =
+            await fetch(`${API}/oportunidades`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            return alert(data.error || 'Error al guardar la oportunidad.');
+        }
+
+        alert('¡Oportunidad publicada exitosamente!');
+        cerrarModalPublicarOportunidad();
+        cargarOportunidades();
+
+    } catch (err) {
+
+        console.error('Error al guardar:', err);
+        alert('Ocurrió un error al intentar publicar.');
 
     }
 }

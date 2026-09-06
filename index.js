@@ -8,22 +8,6 @@ const app = express();
 app.use(express.static(__dirname));
 app.use(express.json());
 
-/* =========================================================
-   CONEXIÓN A POSTGRESQL
-   =========================================================
-   - En LOCAL: usa las variables PGUSER, PGHOST, PGDATABASE,
-     PGPASSWORD, PGPORT definidas en tu archivo .env (que
-     nunca se sube a Internet / GitHub).
-   - En PRODUCCIÓN (Railway, Render, Neon, Supabase, etc.):
-     la mayoría de estos servicios te dan una sola cadena de
-     conexión llamada DATABASE_URL. Si existe, se usa esa y
-     se ignoran las variables PG* individuales.
-   - IMPORTANTE: ya no hay contraseñas ni datos reales
-     escritos en este archivo. Si faltan las variables de
-     entorno, el servidor se detiene con un error claro en
-     vez de arrancar con credenciales inventadas.
-========================================================= */
-
 function construirConfiguracionDB() {
 
     if (process.env.DATABASE_URL) {
@@ -817,7 +801,25 @@ app.get('/api/profesores', async (req, res) => {
     try {
         const resultado = await pool.query(`
             SELECT
-                p.*,
+                p.id,
+                p.nombre,
+                p.grado,
+                p.snii,
+                p.orbis_id,
+                p.orcid,
+                p.entidad_academica,
+                p.entidad_investigacion,
+                p.direccion_oficina,
+                p.cuerpo_academico,
+                p.laboratorio_enfoque,
+                p.foto_url,
+                p.correo,
+                p.perfil_investigacion,
+                p.linea_principal,
+                p.tecnologias,
+                p.google_scholar_url,
+                p.perfil_url,
+                p.orientacion_profesional,
                 COALESCE(pub.total_destacadas, 0) AS publicaciones_destacadas_count,
                 pub.titulo_destacada AS publicacion_destacada_titulo
             FROM profesores p
@@ -913,11 +915,26 @@ app.get('/api/profesor/:id', async (req, res) => {
             ORDER BY destacada DESC, año DESC NULLS LAST, id ASC
         `, [id]);
 
+        const oportunidades = await pool.query(`
+            SELECT
+                id,
+                tipo,
+                titulo_tema,
+                descripcion,
+                requisitos,
+                vacantes,
+                fecha_creacion
+            FROM oportunidades_academicas
+            WHERE profesor_id = $1 AND activa = TRUE
+            ORDER BY fecha_creacion DESC
+        `, [id]);
+
         res.json({
             profesor: profesor.rows[0],
             rutasRelacionadas: rutas.rows,
             lineasInvestigacion: lineas.rows,
-            publicaciones: publicaciones.rows
+            publicaciones: publicaciones.rows,
+            oportunidades: oportunidades.rows
         });
     } catch (err) {
         console.error('Error al obtener profesor:', err);
@@ -974,6 +991,153 @@ app.get('/api/profesor/:id/lineas', async (req, res) => {
         res.json(resultado.rows);
     } catch (err) {
         console.error('Error al obtener líneas de investigación:', err);
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+/* =========================================================
+   OPORTUNIDADES (PRÁCTICAS Y SERVICIO SOCIAL)
+========================================================= */
+
+app.get('/api/oportunidades', async (req, res) => {
+    try {
+        const resultado = await pool.query(`
+            SELECT
+                o.id,
+                o.tipo,
+                o.titulo_tema,
+                o.descripcion,
+                o.requisitos,
+                o.vacantes,
+                o.fecha_creacion,
+                p.id AS profesor_id,
+                p.nombre AS profesor_nombre,
+                p.correo AS profesor_correo,
+                p.cuerpo_academico AS profesor_cuerpo,
+                p.foto_url AS profesor_foto
+            FROM oportunidades_academicas o
+            JOIN profesores p ON p.id = o.profesor_id
+            WHERE o.activa = TRUE
+            ORDER BY o.fecha_creacion DESC
+        `);
+
+        res.json(resultado.rows);
+    } catch (err) {
+        console.error('Error al obtener oportunidades:', err);
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+app.post('/api/oportunidades', async (req, res) => {
+    const {
+        profesor_id,
+        clave_acceso,
+        tipo,
+        titulo_tema,
+        descripcion,
+        requisitos,
+        vacantes
+    } = req.body;
+
+    try {
+        if (!profesor_id || !clave_acceso || !tipo || !titulo_tema) {
+            return res.status(400).json({
+                error: 'Faltan campos obligatorios.'
+            });
+        }
+
+        const profesor = await pool.query(`
+            SELECT clave_acceso
+            FROM profesores
+            WHERE id = $1
+        `, [profesor_id]);
+
+        if (profesor.rows.length === 0) {
+            return res.status(404).json({
+                error: 'Profesor no encontrado.'
+            });
+        }
+
+        if (profesor.rows[0].clave_acceso !== clave_acceso) {
+            return res.status(401).json({
+                error: 'Clave de acceso incorrecta.'
+            });
+        }
+
+        const nueva = await pool.query(`
+            INSERT INTO oportunidades_academicas (
+                profesor_id,
+                tipo,
+                titulo_tema,
+                descripcion,
+                requisitos,
+                vacantes
+            )
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING *
+        `, [
+            profesor_id,
+            tipo,
+            titulo_tema,
+            descripcion || null,
+            requisitos || null,
+            vacantes || 1
+        ]);
+
+        res.json({
+            mensaje: 'Oportunidad publicada correctamente.',
+            oportunidad: nueva.rows[0]
+        });
+    } catch (err) {
+        console.error('Error al publicar oportunidad:', err);
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
+app.post('/api/oportunidades/:id/desactivar', async (req, res) => {
+    const { id } = req.params;
+    const { clave_acceso } = req.body;
+
+    try {
+        const oportunidad = await pool.query(`
+            SELECT o.id, p.clave_acceso
+            FROM oportunidades_academicas o
+            JOIN profesores p ON p.id = o.profesor_id
+            WHERE o.id = $1
+        `, [id]);
+
+        if (oportunidad.rows.length === 0) {
+            return res.status(404).json({
+                error: 'Oportunidad no encontrada.'
+            });
+        }
+
+        if (oportunidad.rows[0].clave_acceso !== clave_acceso) {
+            return res.status(401).json({
+                error: 'Clave de acceso incorrecta.'
+            });
+        }
+
+        await pool.query(`
+            UPDATE oportunidades_academicas
+            SET activa = FALSE
+            WHERE id = $1
+        `, [id]);
+
+        res.json({
+            mensaje: 'Oportunidad desactivada correctamente.'
+        });
+    } catch (err) {
+        console.error('Error al desactivar oportunidad:', err);
 
         res.status(500).json({
             error: err.message
