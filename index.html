@@ -1092,30 +1092,79 @@ ul.item-list{
    PUESTOS SUGERIDOS Y COMPETENCIAS
 ================================ */
 
-.puestos-grid{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    margin-top:8px;
+.puestos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
 }
 
-.puesto-card{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:9px 12px;
-    background:#f8fafc;
-    border:1px solid var(--border-soft);
-    border-left:3px solid var(--accent-violet);
-    border-radius:6px;
-    font-size:.85rem;
-    color:var(--text);
-    font-weight:500;
+.puesto-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid var(--border-soft);
+    border-left: 4px solid var(--accent-violet);
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(16, 24, 38, 0.03);
 }
 
-.puesto-card-icono{
-    font-size:1.05rem;
-    flex-shrink:0;
+.puesto-card:hover {
+    background: #f8fafc;
+    border-color: var(--border);
+    border-left-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(16, 24, 38, 0.08);
+}
+
+.puesto-card-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.puesto-card-titulo {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.puesto-card-link {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--accent-violet);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+}
+
+.puesto-card:hover .puesto-card-link {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.puesto-card-flecha {
+    font-size: 1.2rem;
+    color: var(--border);
+    font-weight: 400;
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.puesto-card:hover .puesto-card-flecha {
+    color: var(--accent-violet);
+    transform: translateX(3px);
 }
 
 .competencias-grid{
@@ -1139,8 +1188,59 @@ ul.item-list{
 }
 
 .competencia-chip::before{
-    content:"⚡";
-    font-size:.75rem;
+    content:none;
+}
+
+/* ================================
+   PUESTOS SUGERIDOS (clicables)
+================================ */
+
+.puesto-modal-content{
+    max-width:520px;
+    text-align:left;
+}
+
+.puesto-modal-acento{
+    width:52px;
+    height:4px;
+    border-radius:3px;
+    background:var(--accent-violet);
+    margin-bottom:14px;
+}
+
+.puesto-modal-titulo{
+    font-family:var(--font-heading);
+    font-size:1.3rem;
+    color:var(--primary-dark);
+    line-height:1.25;
+}
+
+.puesto-modal-seccion{
+    margin-top:16px;
+}
+
+.puesto-modal-seccion-titulo{
+    font-size:.8rem;
+    font-family:var(--font-mono);
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:var(--text-soft);
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.puesto-modal-cuerpo{
+    font-size:.9rem;
+    color:#334155;
+    line-height:1.55;
+}
+
+.puesto-modal-lista{
+    margin:0;
+    padding-left:18px;
+    color:#334155;
+    font-size:.88rem;
+    line-height:1.5;
 }
 
 /* ================================
@@ -1458,8 +1558,6 @@ ul.item-list{
 
         <div class="ruta-titulo-header">
 
-            <span id="rutaIcono" class="ruta-icono-grande">🎓</span>
-
             <h2
                 id="rutaTitulo"
                 style="color:var(--primary-dark);font-size:1.3rem;"
@@ -1542,7 +1640,7 @@ ul.item-list{
             <div style="margin-bottom:15px;">
 
                 <strong style="font-size:.9rem;color:#0f172a;">
-                    💼 Puestos Sugeridos:
+                    Puestos Sugeridos:
                 </strong>
 
                 <div
@@ -1555,7 +1653,7 @@ ul.item-list{
             <div style="margin-bottom:15px;">
 
                 <strong style="font-size:.9rem;color:#0f172a;">
-                    ⚡ Competencias a desarrollar:
+                    Competencias a desarrollar:
                 </strong>
 
                 <div
@@ -1643,7 +1741,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🔎 Perfil de Investigación
+                    Perfil de Investigación
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1665,7 +1763,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🧭 Líneas de Investigación
+                    Líneas de Investigación
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1680,7 +1778,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🛠️ Técnicas y Tecnologías
+                    Técnicas y Tecnologías
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1695,7 +1793,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🪪 Datos personales
+                    Datos personales
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1730,7 +1828,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🏛️ Datos institucionales
+                    Datos institucionales
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1767,7 +1865,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🔬 Investigación
+                    Investigación
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1793,7 +1891,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    📄 Publicaciones Destacadas
+                    Publicaciones Destacadas
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1808,7 +1906,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🎓 Prácticas y Servicio Social
+                    Prácticas y Servicio Social
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1823,7 +1921,7 @@ ul.item-list{
 
             <summary class="acordeon-cabecera">
                 <span class="section-title" style="margin-bottom:0;">
-                    🧩 Rutas Asociadas
+                    Rutas Asociadas
                 </span>
                 <span class="acordeon-flecha">▾</span>
             </summary>
@@ -1947,6 +2045,47 @@ ul.item-list{
 
 </div>
 
+<!-- MODAL DE INFORMACIÓN DE PUESTO -->
+
+<div
+    id="modalPuestoInfo"
+    class="modal-overlay hidden"
+    onclick="cerrarModalPuestoFondo(event)"
+>
+
+    <div class="modal-content puesto-modal-content">
+
+        <button class="modal-close" onclick="cerrarModalPuesto()">
+            &times;
+        </button>
+
+        <div class="puesto-modal-acento"></div>
+        <div class="puesto-modal-titulo" id="puestoModalTitulo"></div>
+
+        <div class="puesto-modal-seccion">
+            <div class="puesto-modal-seccion-titulo">Descripción</div>
+            <div class="puesto-modal-cuerpo" id="puestoModalDescripcion"></div>
+        </div>
+
+        <div class="puesto-modal-seccion">
+            <div class="puesto-modal-seccion-titulo">Funciones habituales</div>
+            <ul class="puesto-modal-lista" id="puestoModalFunciones"></ul>
+        </div>
+
+        <div class="puesto-modal-seccion">
+            <div class="puesto-modal-seccion-titulo">Competencias relacionadas</div>
+            <div class="puesto-modal-cuerpo" id="puestoModalCompetencias"></div>
+        </div>
+
+        <div class="puesto-modal-seccion">
+            <div class="puesto-modal-seccion-titulo">Entornos donde puede trabajar</div>
+            <div class="puesto-modal-cuerpo" id="puestoModalEntornos"></div>
+        </div>
+
+    </div>
+
+</div>
+
 <!-- BOTÓN DE LA SURICATA -->
 
 <div
@@ -1960,7 +2099,7 @@ ul.item-list{
     >
         &times;
     </button>
-    ¡Hola! Si tienes dudas sobre tu orientación de carrera, aquí puedes acceder a mi ayuda 👋
+    Si tienes dudas sobre tu orientación de carrera, aquí puedes acceder a mi ayuda.
 </div>
 
 <button
@@ -2073,7 +2212,7 @@ ul.item-list{
             aria-label="Enviar mensaje"
             title="Enviar"
         >
-            ➤
+            Enviar
         </button>
 
     </div>
@@ -2083,37 +2222,386 @@ ul.item-list{
 <script>
 
 const API = '/api';
+let profesorModalActualId = null;
 
 /* =========================================================
-   ICONOGRAFÍA DE ÁREAS DE DESARROLLO
+   DICCIONARIO DE PUESTOS DIVERSIFICADO E INDIVIDUALIZADO
 ========================================================= */
 
-const MAPA_ICONOS_RUTA = [
-    { claves:['electronic','instrument','embebid','circuit','pcb'], icono:'🔌' },
-    { claves:['mecatron','control','robot','automatiz','plc'], icono:'🤖' },
-    { claves:['programa','cómputo','computo','software','desarrollo'], icono:'💻' },
-    { claves:['dato','inteligencia artificial', 'ia,', 'machine learning'], icono:'📊' },
-    { claves:['matemátic','matematic','modelad','simulaci'], icono:'📐' },
-    { claves:['nanotecno','material'], icono:'🧪' },
-    { claves:['semiconductor','dispositivo electr'], icono:'🔬' },
-    { claves:['espectroscop','caracterizaci','metrolog'], icono:'🔭' },
-    { claves:['óptica','optica','láser','laser','fotónic','fotonic'], icono:'✨' },
-    { claves:['telecomunicaci','comunicaci'], icono:'📡' },
-    { claves:['energía solar','energia solar','fotovoltaic'], icono:'☀️' },
-    { claves:['biofísic','biofisic','médic','medic','biomédic','biomedic'], icono:'🩺' }
+const INFO_PUESTOS = [
+    // 1. SEMICONDUCTORES Y MICROELECTRÓNICA
+    { 
+        claves: ['ingeniero de dispositivos', 'dispositivo', 'dispositivos', 'device engineer'], 
+        descripcion: 'Especialista en la física de estado sólido e microelectrónica enfocado en la concepción, modelado, caracterización eléctrica y optimización del comportamiento físico de componentes (transistores MOSFET, diodos, sensores y semiconductores).', 
+        funciones: [
+            'Caracterizar propiedades eléctricas (curvas I-V, C-V, voltajes de umbral) y ópticas de dispositivos semiconductores.',
+            'Simular el transporte de portadores de carga y la estructura de bandas de energía en materiales mediante software TCAD.',
+            'Analizar mecanismos de degradación, ruptura dieléctrica y confiabilidad física del componente.',
+            'Optimizar la geometría e interconexión de microestructuras para mejorar la velocidad y reducir el consumo energético.'
+        ], 
+        competencias: 'Física de Semiconductores, Caracterización I-V/C-V, Simulación TCAD, Microelectrónica, Análisis de Ruptura y Física de Estado Sólido.', 
+        entornos: 'Fundidoras de microchips (Fabs), centros de diseño de semiconductores, laboratorios de fotónica y nanotecnología.' 
+    },
+    { 
+        claves: ['ingeniero de procesos', 'process engineer', 'ingeniería de procesos'], 
+        descripcion: 'Profesional a cargo de parametrizar, controlar y optimizar las etapas químicas, físicas o mecánicas de la línea de fabricación para maximizar la tasa de producción funcional (Yield) y reducir desperdicios.', 
+        funciones: [
+            'Establecer y ajustar las ventanas operativas de maquinarias de proceso (grabado por plasma, deposición CVD/MBE, litografía o ensamble SMT).',
+            'Monitorear indicadores de estabilidad mediante Control Estadístico de Procesos (SPC) e índices Cp/Cpk.',
+            'Analizar defectos de fabricación en línea, realizando análisis de causa raíz para eliminar paros o scrap.',
+            'Estandarizar hojas de instrucción de trabajo (SOP) e implementar metodologías Lean Manufacturing.'
+        ], 
+        competencias: 'SPC (Control Estadístico de Procesos), Lean Manufacturing, Minitab, Análisis de Causa Raíz (8D/Fishbone), SOPs y Optimización de Yield.', 
+        entornos: 'Plantas de fabricación de semiconductores, industria electrónica (SMT), manufactura automotriz, química e industrial.' 
+    },
+    { 
+        claves: ['semiconductor', 'semiconductores', 'semiconductor engineer'], 
+        descripcion: 'Ingeniero integrado en la infraestructura de fabricación limpia (Cleanrooms) enfocado en la integración de materiales avanzados y fotolitografía para la producción de microchips.', 
+        funciones: [
+            'Supervisar secuencias complejas de fotolitografía, grabado químico, dopaje por implantación iónica y crecimiento epitaxial.',
+            'Operar bajo protocolos estrictos de Sala Limpia (Cleanrooms ISO Class 5 a 7).',
+            'Evaluar la homogeneidad de deposición en obleas de silicio u otros sustratos (GaN, GaAs).',
+            'Diagnosticar fallas estructurales a escala microscópica en la oblea.'
+        ], 
+        competencias: 'Fotolitografía, Grabado por Plasma (Etching), Protocolos de Sala Limpia, Crecimiento Epitaxial (MBE) y Deposición Capa Delgada.', 
+        entornos: 'Fundidoras de semiconductores, centros de desarrollo microelectrónico y laboratorios de nanotecnología.' 
+    },
+
+    // 2. DATOS, SOFTWARE E INTELIGENCIA ARTIFICIAL
+    { 
+        claves: ['data analyst', 'analista de datos', 'análisis de datos'], 
+        descripcion: 'Especialista en diagnosticar el rendimiento operativo y de negocio analizando datos históricos para responder preguntas de negocio específicas y estructurar métricas clave (KPIs).', 
+        funciones: [
+            'Realizar análisis exploratorio de datos (EDA) para identificar patrones operativos y cuellos de botella.',
+            'Diseñar e interpretar tableros dinámicos en Power BI o Tableau para la toma de decisiones directivas.',
+            'Consultar y limpiar bases de datos relacionales mediante SQL intermedio y avanzado.',
+            'Presentar reportes cuantitativos utilizando técnicas de visualización y narrativa de datos (Data Storytelling).'
+        ], 
+        competencias: 'Power BI, Tableau, SQL, Excel Avanzado, Estadística Descriptiva, Análisis de KPIs y Data Storytelling.', 
+        entornos: 'Departamentos de inteligencia de negocios, optimización de calidad, consultoría y analítica empresarial.' 
+    },
+    { 
+        claves: ['business intelligence developer', 'bi developer', 'desarrollador bi'], 
+        descripcion: 'Ingeniero enfocado en automatizar el flujo de datos desde los sistemas transaccionales hacia la capa de reporte empresarial, garantizando la arquitectura semántica e indicadores corporativos.', 
+        funciones: [
+            'Modelar arquitecturas de datos multidimensionales (Esquema Estrella y Copo de Nieve).',
+            'Desarrollar e implementar procesos automatizados de ETL para alimentar el Data Warehouse.',
+            'Escribir medidas complejas en DAX (Power BI) o expresiones MDX para métricas de negocio.',
+            'Optimizar la velocidad de actualización de cubos de datos y modelos semánticos corporativos.'
+        ], 
+        competencias: 'Modelado Multidimensional, DAX, SQL Avanzado, ETL (SSIS / Pentaho / Talend), Power BI Server y Data Warehousing.', 
+        entornos: 'Grandes corporativos, empresas con ERPs/MES complejos, banca e integradoras de inteligencia de negocios.' 
+    },
+    { 
+        claves: ['data engineer', 'ingeniero de datos'], 
+        descripcion: 'Arquitecto de infraestructura responsable de diseñar, construir y mantener los pipelines de datos distribuidos, garantizando la ingesta en tiempo real e escalabilidad del Big Data.', 
+        funciones: [
+            'Diseñar e implementar tuberías de datos (Data Pipelines) por lotes y en streaming con Apache Spark o Kafka.',
+            'Orquestar flujos de trabajo de ingesta masiva con Apache Airflow o Prefect.',
+            'Administrar y optimizar Data Lakes y Data Warehouses en la nube (Snowflake, BigQuery, Databricks).',
+            'Garantizar la alta disponibilidad, seguridad, gobernanza y calidad de los datos para producción.'
+        ], 
+        competencias: 'Python, PySpark, SQL Avanzado, Apache Airflow, Snowflake / BigQuery, Docker, GCP / AWS y Arquitectura de Datos.', 
+        entornos: 'Empresas de tecnología, servicios financieros, plataformas de comercio electrónico y Big Data industrial.' 
+    },
+    { 
+        claves: ['machine learning developer', 'desarrollador de machine learning', 'ml engineer', 'inteligencia artificial'], 
+        descripcion: 'Ingeniero especializado en tomar modelos predictivos o de inteligencia artificial y desplegarlos en arquitecturas de producción escalables (MLOps) y computación de borde (Edge).', 
+        funciones: [
+            'Desarrollar y entrenar modelos de aprendizaje profundo (Deep Learning) para visión artificial o series de tiempo.',
+            'Implementar tuberías MLOps para automatizar el reentrenamiento e monitoreo de modelos en tiempo real.',
+            'Empaquetar e integrar modelos mediante APIs REST (FastAPI/Flask) dentro de contenedores Docker.',
+            'Optimizar redes neuronales para ejecución acelerada en hardware especializado (GPUs / TensorRT / Jetson Nano).'
+        ], 
+        competencias: 'Python, PyTorch, TensorFlow, OpenCV, Docker, FastAPI, MLOps, CUDA y Visión Artificial.', 
+        entornos: 'Visión artificial en líneas de producción, robótica autónoma, tecnología médica e investigación aplicada.' 
+    },
+    { 
+        claves: ['backend developer', 'desarrollador backend'], 
+        descripcion: 'Ingeniero de software centrado en la lógica del servidor, la gestión de bases de datos, la seguridad y la construcción de APIs que interconectan la aplicación con otros sistemas.', 
+        funciones: [
+            'Diseñar e implementar arquitecturas de microservicios y APIs RESTful/GraphQL escalables.',
+            'Gestionar conexiones y transacciones eficientes con bases de datos SQL (PostgreSQL) y NoSQL (Redis/MongoDB).',
+            'Implementar mecanismos de autenticación, autorización (JWT, OAuth2) y seguridad en el servidor.',
+            'Escribir pruebas unitarias e de integración para asegurar la robustez de la lógica de negocio.'
+        ], 
+        competencias: 'Node.js/Express, Python (FastAPI/Django), Java, PostgreSQL, Git, Docker, APIs REST y Microservicios.', 
+        entornos: 'Empresas de desarrollo de software, plataformas web, startups tecnológicas y automatización de procesos.' 
+    },
+    { 
+        claves: ['software developer', 'desarrollador de software', 'programador'], 
+        descripcion: 'Profesional versátil dedicado al ciclo completo de desarrollo de aplicaciones, aplicando estándares de ingeniería de software, patrones de diseño e integraciones de sistemas.', 
+        funciones: [
+            'Escribir código modular, mantenible y escalable utilizando programación orientada a objetos (POO).',
+            'Integrar interfaces de usuario con servicios del backend y servicios web de terceros.',
+            'Gestionar el control de versiones de código e integraciones colaborativas mediante Git.',
+            'Diagnosticar, depurar e optimizar fallas de rendimiento en aplicaciones de escritorio, web o móviles.'
+        ], 
+        competencias: 'C++, Python, JavaScript, Git, Estructuras de Datos, Patrones de Diseño, POO y Bases de Datos.', 
+        entornos: 'Empresas de software, departamentos de TI, desarrollo de sistemas embebidos e I+D tecnológico.' 
+    },
+    { 
+        claves: ['administrador de base de datos', 'base de datos', 'database administrator', 'dba'], 
+        descripcion: 'Especialista en la seguridad, replicación, optimización de consultas e integridad de los motores de bases de datos corporativos.', 
+        funciones: [
+            'Garantizar esquemas de alta disponibilidad, réplicas de lectura y respaldos automatizados.',
+            'Optimizar índices y planes de ejecución para consultas complejas en SQL.',
+            'Gestionar la seguridad de datos, permisos por roles y cifrado en reposo.',
+            'Monitorear la carga de memoria y almacenamiento en servidores de bases de datos.'
+        ], 
+        competencias: 'PostgreSQL, MySQL, SQL Server, Oracle DB, Optimización de Consultas, Backup/Restore y Seguridad.', 
+        entornos: 'Sistemas ERP/MES, sector financiero, empresas de telecomunicaciones e infraestructura crítica.' 
+    },
+
+    // 3. AUTOMATIZACIÓN, CONTROL Y ROBÓTICA
+    { 
+        claves: ['ingeniero de automatización', 'automatiz', 'automation engineer'], 
+        descripcion: 'Especialista en instrumentar, programar e integrar controladores industriales y equipos para automatizar secuencias de producción en plantas operativas.', 
+        funciones: [
+            'Programar controladores lógicos programables (PLC Siemens, Allen-Bradley) en TIA Portal o Studio 5000.',
+            'Diseñar e integrar pantallas de supervisión HMI e interfaces de control SCADA.',
+            'Configurar redes de comunicación industrial (PROFINET, EtherNet/IP, Modbus).',
+            'Diagnosticar fallas en celdas de trabajo automatizadas y sistemas neumáticos.'
+        ], 
+        competencias: 'PLC (TIA Portal / RSLogix), HMI/SCADA, Redes Industriales, Neumática e Interpretación de P&ID.', 
+        entornos: 'Plantas de manufactura, industria automotriz, integradoras de automatización y procesos continuos.' 
+    },
+    { 
+        claves: ['ingeniero de control', 'control', 'control engineer'], 
+        descripcion: 'Ingeniero especializado en el diseño dinámico y modelado matemático de bucles de control para regular variables físicas (temperatura, flujo, posición, velocidad) en procesos estables.', 
+        funciones: [
+            'Modelar matemáticamente la respuesta de sistemas dinámicos continuos y discretos.',
+            'Ajustar lazos de control PID, difuso y predictivo mediante simulaciones en MATLAB/Simulink.',
+            'Seleccionar e integrar servomotores, variadores de frecuencia (VFD) y actuadores de precisión.',
+            'Analizar márgenes de estabilidad del sistema ante perturbaciones industriales.'
+        ], 
+        competencias: 'Teoría de Control Clásico/Moderno, MATLAB/Simulink, Sintonización PID, Servocontrol e Instrumentación.', 
+        entornos: 'Industria aeroespacial, plantas de energía, robótica de precisión, procesos químicos e I+D.' 
+    },
+    { 
+        claves: ['ingeniero robótico', 'robót', 'robot', 'mecatr', 'robotics engineer'], 
+        descripcion: 'Ingeniero enfocado en la integración de manipuladores robóticos, cinemática, sensores e interfaz de control para celdas automatizadas.', 
+        funciones: [
+            'Programar trayectorias e instrucciones operativas para robots industriales (FANUC, KUKA, ABB).',
+            'Integrar sistemas de visión artificial acoplados al efector final (garra) para manipulación de piezas.',
+            'Configurar interbloqueos de seguridad (PLC de seguridad, cortinas de luz, escáneres láser).',
+            'Modelar la cinemática e dinámica de robots manipuladores o móviles.'
+        ], 
+        competencias: 'Programación de Robots (FANUC/KUKA), Visión Artificial, Mecatrónica, Seguridad Robótica y Control de Movimiento.', 
+        entornos: 'Industria automotriz, líneas de paletizado, manufactura pesada e integración de celdas robotizadas.' 
+    },
+
+    // 4. PRUEBAS, CALIDAD Y METROLOGÍA
+    { 
+        claves: ['ingeniero de pruebas', 'pruebas', 'test engineer', 'validación', 'validacion'], 
+        descripcion: 'Ingeniero responsable de evaluar la durabilidad, funcionalidad y cumplimiento normativo de productos y componentes en entornos de prueba extremos.', 
+        funciones: [
+            'Diseñar e automatizar bancos de prueba funcionales (End of Line / EOL) con Python o LabVIEW.',
+            'Someter componentes a pruebas térmicas, vibracionales y de compatibilidad electromagnética (EMC).',
+            'Documentar reportes de fallas, análisis FMEA y planes de prueba de validación (DVP&R).',
+            'Rastrear e coordinar acciones correctivas con el equipo de diseño e ingeniería.'
+        ], 
+        competencias: 'Bancos de prueba, LabVIEW, Python, FMEA, DVP&R, Instrumentación de prueba y Análisis de fallas.', 
+        entornos: 'Industria automotriz (Tier 1/2), sector aeroespacial, validación de dispositivos y electrónica.' 
+    },
+    { 
+        claves: ['ingeniero de calidad', 'calidad', 'quality engineer'], 
+        descripcion: 'Especialista en normatividad y auditoría encargado de supervisar sistemas de gestión de calidad e implementar metodologías de mejora para eliminar defectos en la producción.', 
+        funciones: [
+            'Aplicar gráficos de control estadístico de procesos (SPC) para detectar desviaciones en línea.',
+            'Liderar metodologías de solución de problemas (8Ds, 5 Porqués, Diagrama de Ishikawa) ante no conformidades.',
+            'Coordinar y ejecutar auditorías internas bajo normas ISO 9001 o IATF 16949.',
+            'Inspeccionar componentes de proveedores en el área de recibo (AQL).'
+        ], 
+        competencias: 'ISO 9001, IATF 16949, Six Sigma Green Belt, SPC, Minitab, 8Ds e inspección de calidad.', 
+        entornos: 'Plantas de ensamblaje automotriz, manufactura médica, aeronáutica y cadenas de suministro.' 
+    },
+    { 
+        claves: ['ingeniero de metrología', 'metrolog', 'metrology engineer'], 
+        descripcion: 'Profesional certificado responsable de garantizar la precisión, calibración e incertidumbre de medición en instrumentos de laboratorio e industria.', 
+        funciones: [
+            'Calibrar instrumentos de medición dimensional, eléctrica, de presión o masa comparando contra patrones trazables.',
+            'Estimar presupuestos de incertidumbre de medición según la guía GUM y norma ISO/IEC 17025.',
+            'Programar inspecciones automatizadas en Máquinas de Medición por Coordenadas (CMM).',
+            'Emitir certificados de calibración y auditar la trazabilidad de los instrumentos del laboratorio.'
+        ], 
+        competencias: 'ISO/IEC 17025, estimación de incertidumbre (GUM), calibración de instrumentos, CMM e instrumentación de precisión.', 
+        entornos: 'Laboratorios de calibración acreditados, departamentos de metrología, industria aeroespacial e inspección.' 
+    },
+
+    // 5. HARDWARE, ÓPTICA Y MATERIALES
+    { 
+        claves: ['ingeniero electrónico', 'electrón', 'electron', 'hardware engineer'], 
+        descripcion: 'Profesional dedicado al diseño, simulación, prototipado y ensamble de tarjetas de circuito impreso (PCB) y componentes hardware.', 
+        funciones: [
+            'Diseñar esquemáticos y trazado de pistas para placas PCB multicapa en Altium o KiCAD.',
+            'Realizar pruebas de señal, soldadura SMD de precisión e inspección bajo norma IPC-A-610.',
+            'Calcular e integrar etapas de alimentación de potencia y acondicionamiento analógico.',
+            'Utilizar osciloscopios e instrumentos de banco para la depuración de hardware.'
+        ], 
+        competencias: 'Diseño de PCB, Altium, KiCAD, Soldadura SMD, Osciloscopio, Electrónica Analógica/Digital y Microcontroladores.', 
+        entornos: 'Electromovilidad, diseño de hardware, dispositivos de consumo, telecomunicaciones e instrumentación.' 
+    },
+    { 
+        claves: ['ingeniero de instrumentación', 'instrument'], 
+        descripcion: 'Ingeniero enfocado en la selección, acoplamiento y calibración de sensores para la adquisición precisa de magnitudes físicas e industriales.', 
+        funciones: [
+            'Seleccionar, dimensionar y conectar sensores de temperatura, presión, flujo y deformación.',
+            'Diseñar sistemas de adquisición de datos en tiempo real mediante tarjetas NI-DAQ y LabVIEW.',
+            'Garantizar el acondicionamiento de señal y aislamiento contra ruido electromagnético.',
+            'Calcular incertidumbres de medición e implementar protocolos según la norma ISO/IEC 17025.'
+        ], 
+        competencias: 'Sensores Industriales, LabVIEW, Acondicionamiento de Señal, Metrología, Adquisición de Datos (DAQ) e Incertidumbre.', 
+        entornos: 'Laboratorios de ensayo, industria petrolera, plantas químicas, metrología e investigación aplicada.' 
+    },
+    { 
+        claves: ['ingeniero de materiales', 'material', 'materials engineer'], 
+        descripcion: 'Especialista en investigar la relación entre la estructura interna, composición y propiedades físicas o químicas de materiales avanzados.', 
+        funciones: [
+            'Caracterizar muestras mediante espectroscopía Raman, difracción de rayos X (XRD) y elipsometría.',
+            'Analizar la topografía e composición microestructural mediante microscopía SEM y AFM.',
+            'Evaluar la degradación, resistencia a la tensión y propiedades térmicas de nuevos materiales.',
+            'Diseñar recubrimientos delgados o nanoestructuras funcionales para aplicaciones industriales.'
+        ], 
+        competencias: 'Espectroscopía Raman, XRD, microscopía SEM/AFM, elipsometría, caracterización de materiales y ensayos mecánicos.', 
+        entornos: 'Laboratorios de caracterización, industria metalúrgica, polímeros, semiconductores y centros de investigación.' 
+    },
+    { 
+        claves: ['ingeniero óptico', 'óptico', 'optico', 'óptica', 'optica', 'fotónica', 'fotonica', 'láser', 'laser'], 
+        descripcion: 'Ingeniero dedicado al diseño de lentes, guiado de luz y aplicaciones fotónicas para metrología, comunicaciones e inspección de alta precisión.', 
+        funciones: [
+            'Diseñar e simular la propagación de luz y sistemas de lentes en software como Zemax o CODE V.',
+            'Alinear láseres, guías de onda, espejos e interferómetros sobre bancos ópticos de precisión.',
+            'Implementar sensores ópticos e imágenes metrológicas para control de calidad sin contacto.',
+            'Cumplir y auditar normas de seguridad radiológica y láser (Laser Safety Officer).'
+        ], 
+        competencias: 'Zemax, alineación óptica, láseres, interferometría, fotónica, seguridad láser y sensores ópticos.', 
+        entornos: 'Laboratorios de fotónica, desarrollo de sensores, telecomunicaciones ópticas e inspección industrial.' 
+    },
+    { 
+        claves: ['ingeniero de telecomunicaciones', 'telecom', 'telecom engineer'], 
+        descripcion: 'Especialista en la infraestructura física y lógica de enlaces de telecomunicaciones e transmisión de datos de alta velocidad.', 
+        funciones: [
+            'Probar, auditar y certificar redes de fibra óptica mediante reflectometría OTDR.',
+            'Realizar empalmes por fusión y conectorización de cables de fibra monomodo/multimodo.',
+            'Configurar enrutadores, switches e infraestructura de transporte de datos.',
+            'Medir atenuación, pérdidas de retorno y tasa de error de bits (BER) en enlaces de red.'
+        ], 
+        competencias: 'Fibra óptica, OTDR, empalme por fusión, redes TCP/IP, certificación de enlaces e infraestructura.', 
+        entornos: 'Empresas de telecomunicaciones, proveedores de internet (ISPs), centros de datos e infraestructura.' 
+    },
+
+    // 6. ENERGÍA, FÍSICA MÉDICA E INVESTIGACIÓN
+    { 
+        claves: ['ingeniero fotovoltaico', 'energ', 'solar', 'fotovolta'], 
+        descripcion: 'Ingeniero dedicado al dimensionamiento, simulación e instalación de sistemas de conversión de energía solar fotovoltaica.', 
+        funciones: [
+            'Diseñar e calcular sistemas fotovoltaicos interconectados a la red (SFVR) según la norma NOM-001-SEDE.',
+            'Simular la producción energética anual e pérdidas por sombreado utilizando PVSyst o Helioscope.',
+            'Seleccionar e instalar inversores, arreglos de módulos fotovoltaicos y sistemas de protección en corriente directa y alterna.',
+            'Supervisar pruebas de puesta en marcha e interconexión ante la red eléctrica.'
+        ], 
+        competencias: 'PVSyst, NOM-001-SEDE, cálculos eléctricos AC/DC, diseño fotovoltaico, inversores e radiación solar.', 
+        entornos: 'Empresas de energía solar, consultoría energética, parques fotovoltaicos y auditoría energética.' 
+    },
+    { 
+        claves: ['físico médico', 'bioméd', 'biomed', 'física médica', 'fisica medica', 'medical physics'], 
+        descripcion: 'Especialista que aplica principios físicos y tecnológicos en el diagnóstico clínico por imagen, seguridad radiológica y tratamientos médicos.', 
+        funciones: [
+            'Realizar control de calidad y calibración dosimétrica en aceleradores lineales de radioterapia.',
+            'Calibrar e evaluar la resolución de sistemas de imagenología médica (Rayos X, Tomografía CT, Resonancia Magnética).',
+            'Garantizar el cumplimiento de normas de protección radiológica para pacientes e personal de salud.',
+            'Verificar la gestión e mantenimiento de equipos médicos bajo norma ISO 13485.'
+        ], 
+        competencias: 'Física médica, dosimetría, protección radiológica, imagenología médica e ISO 13485.', 
+        entornos: 'Hospitales de especialidad, centros de radioterapia, empresas de equipamiento médico e investigación.' 
+    },
+    { 
+        claves: ['investigador', 'investigación', 'investigacion', 'researcher'], 
+        descripcion: 'Especialista dedicado al método científico para la generación de conocimiento original, desarrollo tecnológico y difusión académica.', 
+        funciones: [
+            'Diseñar experimentos científicos controlados y formular hipótesis de trabajo.',
+            'Procesar e interpretar datos experimentales con software de análisis científico.',
+            'Redactar artículos científicos (papers) en inglés para revistas arbitradas de impacto.',
+            'Gestionar proyectos de investigación e presentar hallazgos en congresos internacionales.'
+        ], 
+        competencias: 'Método científico, redacción científica en inglés, instrumentación de laboratorio, análisis de datos e I+D.', 
+        entornos: 'Centros de investigación, universidades, laboratorios nacionales e departamentos de I+D industrial.' 
+    },
+    { 
+        claves: ['ingeniero de manufactura', 'manufactura', 'manufacturing engineer'], 
+        descripcion: 'Ingeniero a cargo del control operativo de líneas de producción para cumplir con el volumen diario, métricas de calidad y seguridad.', 
+        funciones: [
+            'Supervisar el flujo continuo de las líneas de producción resolviendo paros no programados.',
+            'Monitorear la efectividad global de los equipos (OEE) e controlar tasas de retrabajo.',
+            'Coordinar con mantenimiento la atención a fallas en la maquinaria.',
+            'Garantizar que el personal operativo trabaje bajo estándares de seguridad e higiene industrial.'
+        ], 
+        competencias: 'Cálculo de OEE, supervisión de manufactura, balanceo de líneas, seguridad industrial y ERP/MES.', 
+        entornos: 'Plantas de manufactura en cualquier sector (automotriz, electrodomésticos, metalmecánica, etc.).' 
+    }
 ];
 
-function iconoParaRuta(titulo) {
+/* =========================================================
+   FUNCIÓN DE BÚSQUEDA JERÁRQUICA
+========================================================= */
 
-    const t = String(titulo || '').toLowerCase();
-
-    for (const grupo of MAPA_ICONOS_RUTA) {
-        if (grupo.claves.some(clave => t.includes(clave))) {
-            return grupo.icono;
+function obtenerInfoPuesto(nombre) {
+    const texto = String(nombre || '').toLowerCase().trim();
+    
+    for (const puesto of INFO_PUESTOS) {
+        for (const clave of puesto.claves) {
+            if (texto === clave || texto.includes(clave)) {
+                return puesto;
+            }
         }
     }
 
-    return '🎓';
+    return {
+        descripcion: `Especialidad técnica enfocada en la aplicación práctica de principios de Ingeniería Física en el rol de ${nombre}.`,
+        funciones: [
+            `Analizar especificaciones técnicas y requerimientos operativos para el puesto de ${nombre}.`,
+            'Diseñar, probar e implementar soluciones de ingeniería adaptadas a las metas de producción o investigación.',
+            'Monitorear indicadores técnicos, resolver desviaciones operativas y documentar resultados.'
+        ],
+        competencias: 'Análisis técnico, resolución de problemas, instrumentación, programación y trabajo multidisciplinario.',
+        entornos: 'Industria avanzada, laboratorios de desarrollo tecnológico, centros de I+D e ingeniería especializada.'
+    };
+}
+
+function normalizarNombrePuesto(nombre) {
+    const n = String(nombre || '').toLowerCase().trim();
+    if (n.includes('data analyst') || n.includes('analista de datos')) return 'Data Analyst';
+    if (n.includes('data engineer') || n.includes('ingeniero de datos')) return 'Data Engineer';
+    if (n.includes('business intelligence') || n.includes('bi developer') || n.includes('desarrollador bi')) return 'Business Intelligence Developer';
+    if (n.includes('machine learning') || n.includes('ml engineer')) return 'Machine Learning Developer';
+    if (n.includes('backend')) return 'Backend Developer';
+    if (n.includes('software developer') || n.includes('desarrollador de software')) return 'Software Developer';
+    return nombre.trim();
+}
+
+function abrirModalPuesto(nombreCodificado) {
+    const nombre = decodeURIComponent(nombreCodificado);
+    const info = obtenerInfoPuesto(nombre);
+
+    document.getElementById('puestoModalTitulo').innerText = nombre;
+    document.getElementById('puestoModalDescripcion').innerText = info.descripcion;
+    document.getElementById('puestoModalFunciones').innerHTML = info.funciones.map(f => `<li>${f}</li>`).join('');
+    document.getElementById('puestoModalCompetencias').innerText = info.competencias;
+    document.getElementById('puestoModalEntornos').innerText = info.entornos;
+
+    document.getElementById('modalPuestoInfo').classList.remove('hidden');
+    document.querySelector('#modalPuestoInfo .modal-content').scrollTop = 0;
+}
+
+function cerrarModalPuesto() {
+    document.getElementById('modalPuestoInfo').classList.add('hidden');
+}
+
+function cerrarModalPuestoFondo(e) {
+    if (e.target.id === 'modalPuestoInfo') {
+        cerrarModalPuesto();
+    }
 }
 
 /* =========================================================
@@ -2156,15 +2644,12 @@ const INFO_CERTIFICACIONES = {
 };
 
 function infoCertificacion(nombre) {
-
     const clave = String(nombre || '').trim().toLowerCase();
-
     return INFO_CERTIFICACIONES[clave] ||
         'No contamos con una descripción detallada de esta certificación todavía. Puedes usar el botón de abajo para buscar información oficial sobre ella.';
 }
 
 function abrirModalCert(nombreCodificado) {
-
     const nombre = decodeURIComponent(nombreCodificado);
 
     document.getElementById('certModalTitulo').innerText = nombre;
@@ -2408,8 +2893,6 @@ async function cargarRutas() {
                     onclick="cargarDetalleRuta(${r.id})"
                 >
 
-                    <span class="ruta-icono">${iconoParaRuta(r.titulo)}</span>
-
                     <div class="option-card-texto">
 
                         <strong style="
@@ -2526,7 +3009,7 @@ async function cargarDirectorioCompleto() {
                         Number(p.publicaciones_destacadas_count) > 0
                             ? `
                                 <div class="pub-indicador">
-                                    📄 ${p.publicaciones_destacadas_count} publicación(es) destacada(s)
+                                    ${p.publicaciones_destacadas_count} publicación(es) destacada(s)
                                 </div>
                               `
                             : ''
@@ -2547,6 +3030,8 @@ async function cargarDirectorioCompleto() {
 }
 
 async function abrirModalProfesor(id) {
+
+    profesorModalActualId = id;
 
     try {
 
@@ -2914,6 +3399,15 @@ async function abrirModalProfesor(id) {
                                     Vacantes: ${o.vacantes}
                                 </div>
 
+                                <button
+                                    type="button"
+                                    class="btn-action"
+                                    onclick="desactivarOportunidad(${o.id})"
+                                    style="width:100%;margin-top:12px;background:#b42318;"
+                                >
+                                    Borrar vacante
+                                </button>
+
                             </div>
 
                         `;
@@ -2977,14 +3471,12 @@ async function abrirModalProfesor(id) {
 
         overlay.classList.remove('hidden');
 
-        // Reinicia el acordeón: solo la primera sección abierta
         document
             .querySelectorAll('#modalProfesor .acordeon-seccion')
             .forEach((seccion, indice) => {
                 seccion.open = indice === 0;
             });
 
-        // Asegura que el modal siempre inicie desde arriba
         const contenido =
             overlay.querySelector('.modal-content');
 
@@ -3031,6 +3523,62 @@ function cerrarModalFondo(e) {
     ) {
 
         cerrarModal();
+
+    }
+}
+
+async function desactivarOportunidad(id) {
+
+    const confirmar = confirm(
+        '¿Seguro que deseas borrar esta vacante? Dejará de aparecer en las publicaciones activas.'
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    const clave = prompt('Ingresa tu clave de acceso para borrar la vacante:');
+
+    if (clave === null) {
+        return;
+    }
+
+    if (!clave.trim()) {
+        alert('Debes ingresar una clave de acceso.');
+        return;
+    }
+
+    try {
+
+        const res = await fetch(`${API}/oportunidades/${id}/desactivar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                clave_acceso: clave
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.error || 'No se pudo borrar la vacante.');
+            return;
+        }
+
+        alert('La vacante fue borrada correctamente.');
+
+        await cargarOportunidades();
+
+        if (profesorModalActualId) {
+            await abrirModalProfesor(profesorModalActualId);
+        }
+
+    } catch (err) {
+
+        console.error('Error al borrar oportunidad:', err);
+        alert('Ocurrió un error al intentar borrar la vacante.');
 
     }
 }
@@ -3327,6 +3875,10 @@ async function analizarFortalezas() {
     }
 }
 
+/* =========================================================
+   FUNCIÓN ÚNICA DE RENDERIZADO Y FILTRADO DE PUESTOS
+========================================================= */
+
 function mostrarResultado(
     ruta,
     profesores,
@@ -3348,13 +3900,6 @@ function mostrarResultado(
         .innerText =
         ruta.titulo ||
         'Sin Título';
-
-    const iconoEl =
-        document.getElementById('rutaIcono');
-
-    if (iconoEl) {
-        iconoEl.innerText = iconoParaRuta(ruta.titulo);
-    }
 
     document
         .getElementById('rutaDescripcion')
@@ -3469,7 +4014,7 @@ function mostrarResultado(
                         Number(p.publicaciones_destacadas_count) > 0
                             ? `
                                 <div class="pub-indicador">
-                                    📄 ${p.publicaciones_destacadas_count} publicación(es) destacada(s)
+                                    ${p.publicaciones_destacadas_count} publicación(es) destacada(s)
                                 </div>
                               `
                             : ''
@@ -3481,25 +4026,36 @@ function mostrarResultado(
 
     }
 
-    const trabajosArray =
-        (ruta.trabajos_sugeridos || '')
-            .split(',')
-            .map(t => t.trim())
-            .filter(Boolean);
+    const trabajosBrutos = (ruta.trabajos_sugeridos || '')
+        .split(',')
+        .map(t => t.trim())
+        .filter(Boolean);
+
+    const puestosUnicos = [];
+    const vistos = new Set();
+
+    trabajosBrutos.forEach(puesto => {
+        const nombreNormalizado = normalizarNombrePuesto(puesto);
+        if (!vistos.has(nombreNormalizado)) {
+            vistos.add(nombreNormalizado);
+            puestosUnicos.push(nombreNormalizado);
+        }
+    });
 
     document
         .getElementById('trabajosLista')
         .innerHTML =
 
-        trabajosArray.length
-            ? trabajosArray
+        puestosUnicos.length
+            ? puestosUnicos
                 .map(t => `
-
-                    <div class="puesto-card">
-                        <span class="puesto-card-icono">💼</span>
-                        <span>${t}</span>
-                    </div>
-
+                    <button type="button" class="puesto-card" onclick="abrirModalPuesto('${encodeURIComponent(t)}')">
+                        <span class="puesto-card-contenido">
+                            <span class="puesto-card-titulo">${t}</span>
+                            <span class="puesto-card-link">Ver detalles del puesto</span>
+                        </span>
+                        <span class="puesto-card-flecha">›</span>
+                    </button>
                 `)
                 .join('')
             : '<span style="color:#64748b;font-size:.85rem;">N/A</span>';
@@ -3608,7 +4164,7 @@ function mostrarResultado(
                             <div class="ruta-resultado-texto">
 
                                 <h4>
-                                    ${iconoParaRuta(r.titulo)} ${r.titulo}
+                                    ${r.titulo}
                                 </h4>
 
                                 <p>
