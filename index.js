@@ -1034,41 +1034,49 @@ app.get('/api/oportunidades', async (req, res) => {
     }
 });
 
-app.post('/api/oportunidades', async (req, res) => {
-    const {
-        profesor_id,
-        clave_acceso,
-        tipo,
-        titulo_tema,
-        descripcion,
-        requisitos,
-        vacantes
-    } = req.body;
+// Endpoint en tu servidor Node.js (Express + PostgreSQL)
+app.post('/api/oportunidades/:id/desactivar', async (req, res) => {
+    const { id } = req.params;
+    const { clave_acceso } = req.body;
+
+    if (!clave_acceso) {
+        return res.status(400).json({ error: 'Debes proporcionar la clave de acceso.' });
+    }
 
     try {
-        if (!profesor_id || !clave_acceso || !tipo || !titulo_tema) {
-            return res.status(400).json({
-                error: 'Faltan campos obligatorios.'
-            });
+        // 1. Obtener la clave de acceso asignada al profesor creador de la vacante
+        const consulta = await pool.query(
+            `SELECT o.id, p.clave_acceso 
+             FROM oportunidades_academicas o 
+             JOIN profesores p ON o.profesor_id = p.id 
+             WHERE o.id = $1`,
+            [id]
+        );
+
+        if (consulta.rows.length === 0) {
+            return res.status(404).json({ error: 'La vacante solicitada no existe.' });
         }
 
-        const profesor = await pool.query(`
-            SELECT clave_acceso
-            FROM profesores
-            WHERE id = $1
-        `, [profesor_id]);
+        const vacante = consulta.rows[0];
 
-        if (profesor.rows.length === 0) {
-            return res.status(404).json({
-                error: 'Profesor no encontrado.'
-            });
+        // 2. Verificar que la clave ingresada coincida
+        if (vacante.clave_acceso !== clave_acceso.trim()) {
+            return res.status(401).json({ error: 'Clave de acceso incorrecta.' });
         }
 
-        if (profesor.rows[0].clave_acceso !== clave_acceso) {
-            return res.status(401).json({
-                error: 'Clave de acceso incorrecta.'
-            });
-        }
+        // 3. Marcar la vacante como inactiva (o eliminarla)
+        await pool.query(
+            'UPDATE oportunidades_academicas SET activa = FALSE WHERE id = $1',
+            [id]
+        );
+
+        return res.json({ mensaje: 'La vacante fue desactivada correctamente.' });
+
+    } catch (err) {
+        console.error('Error al desactivar vacante:', err);
+        return res.status(500).json({ error: 'Error interno en el servidor.' });
+    }
+});
 
         const nueva = await pool.query(`
             INSERT INTO oportunidades_academicas (
